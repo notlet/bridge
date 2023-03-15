@@ -23,30 +23,9 @@ const minecraftLoginOptions = {
 
 global.minecraftClient = mineflayer.createBot(minecraftLoginOptions);
 global.nonBomb = {lastUsed: 0, active: false};
-global.snipes = {lastUsed: {}};
-global.misc_data = {nerds: [], chatGPTSystemPrompt: "You are an AI language model inside a Discord Bot created by user named LetGame, designed to help users out with their various problems."};
-global.cronJobs = {};
-global.itemImages = {
-    hashMap: require('./data/neurepo/itemHash.json'),
-    imageMap: require('./data/neurepo/images.json')
-}
-
-global.userConversations = {};
-global.gptCredits = JSON.parse(fs.readFileSync(process.cwd() + "/data/gptCredits.json", {encoding: "utf8"}));
-Object.keys(gptCredits).forEach(u => { 
-    if (gptCredits[u] == null) gptCredits[u] = Infinity;
-    if (typeof gptCredits[u] !== 'number') gptCredits[u] = undefined;
-})
-
-cronJobs.gptCreditsRefreshJob = new CronJob("0 * * * *", () => {
-    Object.keys(gptCredits).forEach(u => { 
-        if (gptCredits[u] == Infinity || gptCredits[u] > 10) return;
-        gptCredits[u] = 10;
-    })
-}, null, true);
 
 global.blacklist = JSON.parse(fs.readFileSync(process.cwd() + "/data/blacklist.json", {encoding: "utf8"}));
-cronJobs.blacklistRefreshJob = new CronJob("*/5 * * * *", () => { blacklist = JSON.parse(fs.readFileSync(process.cwd() + "/data/blacklist.json", {encoding: "utf8"})) }, null, true);
+global.blacklistRefreshJob = new CronJob("*/5 * * * *", () => { blacklist = JSON.parse(fs.readFileSync(process.cwd() + "/data/blacklist.json", {encoding: "utf8"})) }, null, true);
 
 startMinecraftBot(minecraftClient, discordClient);
 async function startMinecraftBot(minecraftClient, discordClient) {
@@ -67,7 +46,6 @@ async function startMinecraftBot(minecraftClient, discordClient) {
 require('./handlers/discordEvents')(discordClient);
 require('./handlers/discordCommands')(discordClient);
 require('./handlers/api')();
-require('./sniper.js')(discordClient);
 
 if (config.options.unknownDisconnectRelog) {
     setInterval(async () => {
@@ -92,23 +70,13 @@ process.on('uncaughtException', console.error);
 process.on('unhandledRejection', console.error);
 
 discordClient.login(config.keys.discordBotToken);
-discordClient.on("ready", () => {discordClient.user.setActivity("with balls", { type: "PLAYING"})})
+discordClient.on("ready", () => discordClient.user.setActivity("Guild Chat", { type: "WATCHING"}));
 
 discordClient.on("messageCreate", message => {
-    if (!(message.content.startsWith("!eval ") && message.author.id == "478480501649309708")) return;
+    if (!(message.content.startsWith("!evalb ") && message.author.id == "478480501649309708")) return;
 
-    let { 1: params, 2: cmd } = message.content.replace(/\n/g, " ").match(/^!eval( -\w{1,3})? (.+)/i);
-    console.log("Evaluating: " + cmd)
-    const quickCommandsMatch = cmd.match(/%{[A-Z]+:?[^}]*}%/g);
-    const allQuickCommands = require('./quickEvalCommands.js');
-    if (quickCommandsMatch)
-        for (const quickCommand of quickCommandsMatch) {
-            let { 1: command, 2: args } = quickCommand.match(/%{([A-Z]+):?(.*?)}%/);
-            if (allQuickCommands[command] == undefined) continue;
-            console.log("Quick command: " + command + " | " + args);
-            cmd = cmd.replace(quickCommand, allQuickCommands[command](args));
-        }
-
+    let { 1: params, 2: cmd } = message.content.replace(/\n/g, " ").match(/^!evalb( -\w{1,3})? (.+)/i);
+    console.log("Evaluating: " + cmd);
     eval(`const evalFunc = async () => { ${cmd} }; evalFunc();`).then(r => {
         if (params?.includes("r")) {
             let resp = typeof r == 'object' ? JSON.stringify(r) : r;

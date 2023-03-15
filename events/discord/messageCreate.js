@@ -17,47 +17,6 @@ module.exports = {
 		attachments = message.attachments.map(a => a.url);
 		if (message.attachments.length == 0 && message.content === '') return;
 
-		let sus = message.content.match(/a?mon?g ?(?:us|er)|amog|sus|ඞ/gi)
-		if (sus) sus.length > 1 ? message.react("<a:amogus_fast:1081129163953549332>") : message.react("<a:amogus:956111710232649789>");
-		if (message.content.match(/let.?game|game.?let|glame|478480501649309708/i)) message.react("<:amogus:990281168366731294>");
-        if (message.content.match(/sil\wer|1984|808106580905689158/i)) message.react("<:literally1984:1058546639519895622>");
-		if (misc_data.nerds.includes(message.author.id)) message.reply({ content: `<:nerd:990281891296976936> "${message.content}"`, allowedMentions: { parse: [] } });
-
-		if (message.content.startsWith("+react ") || message.content.includes("+emoji ")) {
-			if (message.content.startsWith("+react") && (!message.reference || !message.reference.messageId)) return;
-
-			const match = message.content.replace(/.*\+(?:react|emoji) /g, "").match(/([0-9]{17,})|([a-zA-Z0-9_]+)(~[0-9]{1,2})?/);
-
-			const matchingEmojis = Object.values(discordClient.emojis.cache.filter(e => {
-				if (match[1]) return e.id == match[1];
-				else if (match[2]) return e.name.toLowerCase() == match[2].toLowerCase();
-			}).toJSON());
-
-			if (matchingEmojis.length < 1) return;
-			const emoji = match[3] ? parseInt(match[3].substr(1)) < matchingEmojis.length ? matchingEmojis[parseInt(match[3].substr(1))] : matchingEmojis[0] : matchingEmojis[0];
-			const emojiStr = `<${emoji.animated ? "a" : ""}:${emoji.name}:${emoji.id}>`;
-
-			if (message.content.startsWith("+react")) {
-				message.channel.messages.cache.get(message.reference.messageId).react(emojiStr);
-				return message.delete()
-			} else {
-				if (recentEmoji.name == emoji.name && recentEmoji.amt > 3) return;
-				else if (recentEmoji.name == emoji.name) recentEmoji.amt++;
-				else recentEmoji = { name: emoji.name, amt: 1 };
-				message.reply(emojiStr);
-			}
-		}
-
-        if (message.content.startsWith("!") && !(message.channelId === config.channels.guildIngameChat || message.channelId === config.channels.officerIngameChat)) {
-            const prefixCommands = fs.readdirSync(process.cwd() + '/prefixCommands').map(c => {
-                const command = require('../../prefixCommands/' + c);
-                if (!command) return null;
-                return {name: command.name, aliases: command.aliases ? command.aliases : [], exec: command.exec};
-            });
-            let index = prefixCommands.findIndex(c => c.name == message?.content?.substr(1)?.split(" ")[0] || c.aliases.includes(message?.content?.substr(1)?.split(" ")[0]));
-            if (index >= 0) return prefixCommands[index].exec(discordClient, message);
-        }
-
 		if (message.content.startsWith('\\')) {
 			message.content = message.content.substring(1);
 		}
