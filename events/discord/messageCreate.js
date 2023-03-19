@@ -4,8 +4,6 @@ const { formatMentions, numberformatter } = require('../../helper/functions.js')
 const messagesReactionCache = new Map();
 const fs = require('fs');
 
-let recentEmoji = { name: "", amt: 0 };
-
 module.exports = {
 	execute: async (discordClient, message) => {
 		if (message.author.bot) return;

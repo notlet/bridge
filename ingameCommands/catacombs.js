@@ -16,7 +16,7 @@ module.exports = {
         const searchedPlayer = await getPlayer(username, profile, true).catch((err) => {
             return minecraftClient.chat(`/gc @${messageAuthor} ${err}`);
         });
-	if (!searchedPlayer?.memberData?.dungeons) return;
+	    if (!searchedPlayer?.memberData?.dungeons) return;
         const dungeons = searchedPlayer.memberData.dungeons
 
         const cataLvl = getSkillLevel(dungeons.dungeon_types.catacombs.experience, {decimals: 2, skill: "dungeoneering"}).fancy;
