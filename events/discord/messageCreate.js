@@ -22,7 +22,7 @@ module.exports = {
 		if (message.channelId === config.channels.ingameChatLog && message.content.startsWith("/") && !message.content.includes("coop")) {
 			return minecraftClient.chat(message.content);
 		} else if (message.channelId === config.channels.guildIngameChat || message.channelId === config.channels.officerIngameChat) {
-            if (message.flags == 4096) return;
+            //if (message.flags.toArray().includes('SUPPRESS_NOTIFICATIONS')) return;
 			const command = message.channelId === config.channels.officerIngameChat ? '/oc' : '/gc';
 			const linkedPlayers = JSON.parse(fs.readFileSync('./data/guildLinks.json'));
 			let playerRank;
@@ -55,7 +55,7 @@ module.exports = {
 			}
 
 			message.content = await formatMentions(discordClient, message.content);
-			message.content = message.content.replace(/\n/g, '');
+			message.content = message.content.replace(/\n/g, ' | ');
 			let msg = (messagePrefix + message.content).substring(0, 256);
 
 			if ((messagePrefix + message.content).length >= 256) {

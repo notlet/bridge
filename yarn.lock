@@ -2,17 +2,17 @@
 # yarn lockfile v1
 
 
-"@azure/msal-common@^10.0.0":
-  version "10.0.0"
-  resolved "https://registry.npmjs.org/@azure/msal-common/-/msal-common-10.0.0.tgz"
-  integrity sha512-/LghpT93jsZLy55QzTsRZWMx6R1Mjc1Aktwps8sKSGE3WbrGwbSsh2uhDlpl6FMcKChYjJ0ochThWwwOodrQNg==
+"@azure/msal-common@^11.0.0":
+  version "11.0.0"
+  resolved "https://registry.npmjs.org/@azure/msal-common/-/msal-common-11.0.0.tgz"
+  integrity sha512-SZH8ObQ3Hq5v3ogVGBYJp1nNW7p+MtM4PH4wfNadBP9wf7K0beQHF9iOtRcjPOkwZf+ZD49oXqw91LndIkdk8g==
 
 "@azure/msal-node@^1.1.0":
-  version "1.15.0"
-  resolved "https://registry.npmjs.org/@azure/msal-node/-/msal-node-1.15.0.tgz"
-  integrity sha512-fwC5M0c8pxOAzmScPbpx7j28YVTDebUaizlVF7bR0xvlU0r3VWW5OobCcr9ybqKS6wGyO7u4EhXJS9rjRWAuwA==
+  version "1.16.0"
+  resolved "https://registry.npmjs.org/@azure/msal-node/-/msal-node-1.16.0.tgz"
+  integrity sha512-eGXPp65i++mAIvziafbCH970TCeECB6iaQP7aRzZEjtU238cW4zKm40U8YxkiCn9rR1G2VeMHENB5h6WRk7ZCQ==
   dependencies:
-    "@azure/msal-common" "^10.0.0"
+    "@azure/msal-common" "^11.0.0"
     jsonwebtoken "^9.0.0"
     uuid "^8.3.0"
 
@@ -120,9 +120,9 @@
     form-data "^3.0.0"
 
 "@types/node@*":
-  version "18.14.4"
-  resolved "https://registry.npmjs.org/@types/node/-/node-18.14.4.tgz"
-  integrity sha512-VhCw7I7qO2X49+jaKcAUwi3rR+hbxT5VcYF493+Z5kMLI0DL568b7JI4IDJaxWFH0D/xwmGJNoXisyX+w7GH/g==
+  version "18.15.10"
+  resolved "https://registry.npmjs.org/@types/node/-/node-18.15.10.tgz"
+  integrity sha512-9avDaQJczATcXgfmMAW3MIWArOO7A+m90vuCFLr8AotWf8igO/mRoYukrk2cqZVtv38tHs33retzHEilM7FpeQ==
 
 "@types/readable-stream@^2.3.13":
   version "2.3.15"
@@ -241,7 +241,7 @@ axios@^0.21.1:
   dependencies:
     follow-redirects "^1.14.0"
 
-axios@^0.26.0, axios@^0.26.1:
+axios@^0.26.1:
   version "0.26.1"
   resolved "https://registry.npmjs.org/axios/-/axios-0.26.1.tgz"
   integrity sha512-fPwcX4EvnSHuInCMItEhAGnaSEXRBjtzh9fOtsE6E1G6p7vl7edEeZe11QHf18+6+9gR5PbKV/sGKNaD8YaMeA==
@@ -524,9 +524,9 @@ discord-api-types@^0.36.2:
   integrity sha512-bz/NDyG0KBo/tY14vSkrwQ/n3HKPf87a0WFW/1M9+tXYK+vp5Z5EksawfCWo2zkAc6o7CClc0eff1Pjrqznlwg==
 
 discord.js@^13.13.1:
-  version "13.13.1"
-  resolved "https://registry.npmjs.org/discord.js/-/discord.js-13.13.1.tgz"
-  integrity sha512-4QdeSIGOIeZ25cTOxaPdVqIXz8tN56DetXFAwEkDHX5sDqbsXm9gMaNhfaOwMap3d5mgdC7I78g70I82x5i5lw==
+  version "13.14.0"
+  resolved "https://registry.npmjs.org/discord.js/-/discord.js-13.14.0.tgz"
+  integrity sha512-EXHAZmFHMf6qBHDsIANwSG792SYJpzEFv2nssfakyDqEn0HLxFLLXMaOxBtVohdkUMgtD+dzyeBlbDvAW/A0AA==
   dependencies:
     "@discordjs/builders" "^0.16.0"
     "@discordjs/collection" "^0.7.0"
@@ -979,9 +979,9 @@ make-dir@^3.1.0:
     semver "^6.0.0"
 
 mathjs@^11.6.0:
-  version "11.6.0"
-  resolved "https://registry.npmjs.org/mathjs/-/mathjs-11.6.0.tgz"
-  integrity sha512-6AAhoVvmCJSozTW+pc3XAwe9pLlAO5fYHnrHv4XWb0NQxjdz0DRnT3qneOPkKH6raTnlvHuX3XGLv8BmgXfiEg==
+  version "11.7.0"
+  resolved "https://registry.npmjs.org/mathjs/-/mathjs-11.7.0.tgz"
+  integrity sha512-RCXtrP5xGIbl9PUc5+7QL81rBCUjzoIZ0ugNqKsarOUxg+x7deY0BzfNai+bGfUL/T+1uYq1xs5w2xVdL3lp0g==
   dependencies:
     "@babel/runtime" "^7.21.0"
     complex.js "^2.1.1"
@@ -1041,9 +1041,9 @@ mimic-response@^3.1.0:
   integrity sha512-z0yWI+4FDrrweS8Zmt4Ej5HdJmky15+L2e6Wgn3+iK5fWzb6T3fhNFq2+MeTRb064c6Wr4N/wv0DzQTjNzHNGQ==
 
 minecraft-data@^3.0.0, minecraft-data@^3.21.0, minecraft-data@^3.26.0:
-  version "3.29.0"
-  resolved "https://registry.npmjs.org/minecraft-data/-/minecraft-data-3.29.0.tgz"
-  integrity sha512-1DRZEV68q6l8iF+uvlCSCj+Nb+FlkgZ9QCuWO2GZ+VJkTjdYGYCq5Eo2/4bdrcctVyKYSn2mt1NYCtGzLnS0TQ==
+  version "3.31.0"
+  resolved "https://registry.npmjs.org/minecraft-data/-/minecraft-data-3.31.0.tgz"
+  integrity sha512-3U8LSXP8HaRtEKpdiZ339o34GFNpUSF9K+KaX/F0KzaQ0XLtBr+PVqNDZkkRiipkg3FQbKCioZyy8aglT3J18w==
 
 minecraft-folder-path@^1.2.0:
   version "1.2.0"
@@ -1051,9 +1051,9 @@ minecraft-folder-path@^1.2.0:
   integrity sha512-qaUSbKWoOsH9brn0JQuBhxNAzTDMwrOXorwuRxdJKKKDYvZhtml+6GVCUrY5HRiEsieBEjCUnhVpDuQiKsiFaw==
 
 minecraft-protocol@^1.40.3:
-  version "1.41.1"
-  resolved "https://registry.npmjs.org/minecraft-protocol/-/minecraft-protocol-1.41.1.tgz"
-  integrity sha512-Bxhv94gzbCdKNP+zlb5k1ZAc/xrwhlSUzPWIOEZjqe3651NxEwxhavKjy3AirZHE4bWMgaYBYc3vrjT41VbSCA==
+  version "1.41.2"
+  resolved "https://registry.npmjs.org/minecraft-protocol/-/minecraft-protocol-1.41.2.tgz"
+  integrity sha512-r2TbsyKtXK9IAxZYmBju/aHtseXBSgegUbqnnhCDW3qe60c0nFkUAoSJNNRMDHIxFUq1iVgkxHhKPRxgRs3Omg==
   dependencies:
     "@types/readable-stream" "^2.3.13"
     aes-js "^3.1.2"
@@ -1112,9 +1112,9 @@ minipass@^3.0.0:
     yallist "^4.0.0"
 
 minipass@^4.0.0:
-  version "4.2.4"
-  resolved "https://registry.npmjs.org/minipass/-/minipass-4.2.4.tgz"
-  integrity sha512-lwycX3cBMTvcejsHITUgYj6Gy6A7Nh4Q6h9NP4sTHY1ccJlC7yKzDmiShEHsJ16Jf1nKGDEaiHxiltsJEvk0nQ==
+  version "4.2.5"
+  resolved "https://registry.npmjs.org/minipass/-/minipass-4.2.5.tgz"
+  integrity sha512-+yQl7SX3bIT83Lhb4BVorMAHVuqsskxRdlmO9kTpyukp8vsm2Sn/fUOV9xlnG8/a5JsypJzap21lz/y3FBMJ8Q==
 
 minizlib@^2.1.1:
   version "2.1.2"
@@ -1137,9 +1137,9 @@ mojangson@^2.0.1:
     nearley "^2.19.5"
 
 moment-timezone@^0.5.x:
-  version "0.5.41"
-  resolved "https://registry.npmjs.org/moment-timezone/-/moment-timezone-0.5.41.tgz"
-  integrity sha512-e0jGNZDOHfBXJGz8vR/sIMXvBIGJJcqFjmlg9lmE+5KX1U7/RZNMswfD8nKnNCnQdKTIj50IaRKwl1fvMLyyRg==
+  version "0.5.42"
+  resolved "https://registry.npmjs.org/moment-timezone/-/moment-timezone-0.5.42.tgz"
+  integrity sha512-tjI9goqwzkflKSTxJo+jC/W8riTFwEjjunssmFvAWlvNVApjbkJM7UHggyKO0q1Fd/kZVKY77H7C9A0XKhhAFw==
   dependencies:
     moment "^2.29.4"
 
@@ -1259,14 +1259,6 @@ once@^1.3.0, once@^1.3.1, once@^1.4.0:
   integrity sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==
   dependencies:
     wrappy "1"
-
-openai@^3.2.1:
-  version "3.2.1"
-  resolved "https://registry.npmjs.org/openai/-/openai-3.2.1.tgz"
-  integrity sha512-762C9BNlJPbjjlWZi4WYK9iM2tAVAv0uUp1UmI34vb0CN5T2mjB/qM6RYBmNKMh/dN9fC+bxqPwWJZUTWW052A==
-  dependencies:
-    axios "^0.26.0"
-    form-data "^4.0.0"
 
 p-cancelable@^2.0.0:
   version "2.1.1"
@@ -1503,18 +1495,18 @@ raw-body@2.5.1:
     unpipe "1.0.0"
 
 readable-stream@^3.0.3:
-  version "3.6.1"
-  resolved "https://registry.npmjs.org/readable-stream/-/readable-stream-3.6.1.tgz"
-  integrity sha512-+rQmrWMYGA90yenhTYsLWAsLsqVC8osOw6PKE1HDYiO0gdPeKe/xDHNzIAIn4C91YQ6oenEhfYqqc1883qHbjQ==
+  version "3.6.2"
+  resolved "https://registry.npmjs.org/readable-stream/-/readable-stream-3.6.2.tgz"
+  integrity sha512-9u/sniCrY3D5WdsERHzHE4G2YCXqoG5FTHUiCC4SIbr6XcLZBY05ya9EKjYek9O5xOAwjGq+1JdGBAS7Q9ScoA==
   dependencies:
     inherits "^2.0.3"
     string_decoder "^1.1.1"
     util-deprecate "^1.0.1"
 
 readable-stream@^3.6.0:
-  version "3.6.1"
-  resolved "https://registry.npmjs.org/readable-stream/-/readable-stream-3.6.1.tgz"
-  integrity sha512-+rQmrWMYGA90yenhTYsLWAsLsqVC8osOw6PKE1HDYiO0gdPeKe/xDHNzIAIn4C91YQ6oenEhfYqqc1883qHbjQ==
+  version "3.6.2"
+  resolved "https://registry.npmjs.org/readable-stream/-/readable-stream-3.6.2.tgz"
+  integrity sha512-9u/sniCrY3D5WdsERHzHE4G2YCXqoG5FTHUiCC4SIbr6XcLZBY05ya9EKjYek9O5xOAwjGq+1JdGBAS7Q9ScoA==
   dependencies:
     inherits "^2.0.3"
     string_decoder "^1.1.1"
@@ -1666,9 +1658,9 @@ simple-get@^3.0.3:
     simple-concat "^1.0.0"
 
 skyhelper-networth@^1.8.2:
-  version "1.11.5"
-  resolved "https://registry.npmjs.org/skyhelper-networth/-/skyhelper-networth-1.11.5.tgz"
-  integrity sha512-BOP54ysxJNDa0FI3MEtvZYb2kgGYMfKU4oH2tIpo/xoVYWUpTrS7/Ka44vv2d4mIiBskq3weM7yZU161MwdOnw==
+  version "1.12.1"
+  resolved "https://registry.npmjs.org/skyhelper-networth/-/skyhelper-networth-1.12.1.tgz"
+  integrity sha512-s2QzahRsDB9D/QrY6idqiG+uW+9ZVupLiNpPseJPuTeg6czFKxdaS67n/6v0o9u1g3WsMp9WhJQkZ3t2oFRcoQ==
   dependencies:
     axios "^0.27.2"
     prismarine-nbt "^2.2.1"
@@ -1860,9 +1852,9 @@ wrappy@1:
   integrity sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==
 
 ws@^8.9.0:
-  version "8.12.1"
-  resolved "https://registry.npmjs.org/ws/-/ws-8.12.1.tgz"
-  integrity sha512-1qo+M9Ba+xNhPB+YTWUlK6M17brTut5EXbcBaMRN5pH5dFrXz7lzz1ChFSUq3bOUl8yEvSenhHmYUNJxFzdJew==
+  version "8.13.0"
+  resolved "https://registry.npmjs.org/ws/-/ws-8.13.0.tgz"
+  integrity sha512-x9vcZYTrFPC7aSIbj7sRCYo7L/Xb8Iy+pW0ng0wt2vCJv7M9HOMy0UoN3rr+IFC7hb7vXoqS+P9ktyLLLhO+LA==
 
 xxhash-wasm@^0.4.2:
   version "0.4.2"

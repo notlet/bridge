@@ -19,13 +19,13 @@ function getTableAndMax(skill, manualCap) {
  * @param {{skill: String, decimals: Number, manualCap: Number}} data skill name, number of decimals to return, and manual level cap
  * @returns {Number} skill level
  */
-function getSkillLevel(experience, { skill, decimals = 0, manualCap } = { decimals: 0 }) {
+function getSkillLevel(experience, { skill, decimals = 0, manualCap, totalExp } = { decimals: 0 }) {
     if (!experience) return {level: 0, overflow: 0, fancy: `0`};
     const { table, maxLevel } = getTableAndMax(skill, manualCap);
     let level = skillTables[table].filter((exp) => exp <= experience).length - 1;
     if (level >= maxLevel) {
-	let maxLevelExp = skillTables[table][maxLevel];
-	return {level: maxLevel, overflow: experience - maxLevelExp, fancy:`${maxLevel} + ${numberformatter(experience - maxLevelExp, 2)} exp`};
+	    let maxLevelExp = skillTables[table][maxLevel];
+	    return {level: maxLevel, overflow: experience - maxLevelExp, fancy: totalExp ? `${maxLevel} (${numberformatter(experience, 2)} exp)` : `${maxLevel} + ${numberformatter(experience - maxLevelExp, 2)} exp`};
     }
 
     if (decimals) {
@@ -35,7 +35,7 @@ function getSkillLevel(experience, { skill, decimals = 0, manualCap } = { decima
     }
 
     if (level < 0) return {level: 0, overflow: 0, fancy: `0`};
-    else return {level: level, overflow: 0, fancy: `${level}`};
+    else return {level: level, overflow: 0, fancy: totalExp ? `${level} (${numberformatter(experience, 2)} exp)` : level};
 }
 
 /**
