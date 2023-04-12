@@ -21,7 +21,7 @@ module.exports = {
                 minecraftClient.chat('/locraw');
             }, 5000);
 
-            minecraftClient.on("login", () => setTimeout(() => minecraftClient.chat("/locraw"), 4000));
+            minecraftClient.on("login", () => setTimeout(() => minecraftClient.chat("/locraw"), 10000));
             setInterval(() => {
                 minecraftClient.chat('/locraw');
             }, 1000 * 60 * 5);
