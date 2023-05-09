@@ -61,11 +61,19 @@ module.exports = {
         // LIMBO CHECK
         try {
             const parsedMessage = JSON.parse(msgString);
-            if (parsedMessage.gametype !== 'SKYBLOCK'  && parsedMessage) {
-		if (parsedMessage.gametype == 'MAIN') return setTimeout(() => minecraftClient.chat("/play skyblock"), 1000);
-                else return setTimeout(() => {minecraftClient.chat("/lobby"); setTimeout(() => {minecraftClient.chat("/play skyblock")}, 5000)}, 1000);
-            } else if (parsedMessage.gametype === 'SKYBLOCK') {
-                return minecraftClient.chat("/warp home");
+            if (config.options.limbo) {
+                if (parsedMessage.server !== 'limbo' && parsedMessage) {
+                    return minecraftClient.chat('\u00a7');
+                } else if (parsedMessage.server === 'limbo') {
+                    return;
+                }
+            } else {
+                if (parsedMessage.gametype !== 'SKYBLOCK'  && parsedMessage) {
+                    if (parsedMessage.gametype == 'MAIN') return setTimeout(() => minecraftClient.chat("/play skyblock"), 1000);
+                    else return setTimeout(() => {minecraftClient.chat("/lobby"); setTimeout(() => {minecraftClient.chat("/play skyblock")}, 5000)}, 1000);
+                } else if (parsedMessage.gametype === 'SKYBLOCK') {
+                    return minecraftClient.chat("/warp home");
+                }
             }
         } catch (e) {}
 
@@ -127,7 +135,7 @@ module.exports = {
                 if (bridgeChannel) {
                     //console.log(msgStringColor, messageAuthor);
                     let msgtosend = msgStringColor.substring(10)
-                    if (messageAuthor == config.minecraft.ingameName && msgString.startsWith("Guild > game_let [MOD]: @")) {
+                    if (messageAuthor == config.minecraft.ingameName && msgString.match(new RegExp(`^Guild > ${config.minecraft.ingameName} \\[[\\w\\d]+\\]: @`, "i"))) {
 			//console.log(msgtosend)
 			//console.log(msgtosend.match(/@([\S]+)/))
 			//console.log(msgtosend.match(/@([\S]+)'s/))
