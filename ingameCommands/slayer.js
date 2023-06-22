@@ -24,9 +24,10 @@ module.exports = {
             "tara": getSkillLevel(memberData?.slayer_bosses?.spider?.xp || 0, { skill: 'slayer', totalExp: true }).fancy,
             "wolf": getSkillLevel(memberData?.slayer_bosses?.wolf?.xp || 0, { skill: 'slayer', totalExp: true }).fancy,
             "eman": getSkillLevel(memberData?.slayer_bosses?.enderman?.xp || 0, { skill: 'slayer', totalExp: true }).fancy,
-            "blaze": getSkillLevel(memberData?.slayer_bosses?.blaze?.xp || 0, { skill: 'slayer', totalExp: true }).fancy
+            "blaze": getSkillLevel(memberData?.slayer_bosses?.blaze?.xp || 0, { skill: 'slayer', totalExp: true }).fancy,
+            "vampire": getSkillLevel(memberData?.slayer_bosses?.vampire?.xp || 0, { skill: 'slayer_vampire', totalExp: true }).fancy
         }
 
-        minecraftClient.chat(`/gc @${messageAuthor}${messageAuthor === username ? "" : ` ${username}`} has ${numberformatter(total, 2)} total slayer exp. | Zombie: ${slayers.rev} | Spider: ${slayers.tara} | Wolf: ${slayers.wolf} | Eman: ${slayers.eman} | Blaze: ${slayers.blaze}`);
+        minecraftClient.chat(`/gc @${messageAuthor}${messageAuthor === username ? "" : ` ${username}`} has ${numberformatter(total, 2)} total slayer exp. | Zombie: ${slayers.rev} | Spider: ${slayers.tara} | Wolf: ${slayers.wolf} | Eman: ${slayers.eman} | Blaze: ${slayers.blaze} | Vampire: ${slayers.vampire}`);
     },
 };

@@ -5,7 +5,7 @@ function getTableAndMax(skill, manualCap) {
     const table =
         skill === 'dungeonClass'
             ? 'dungeoneering'
-            : ['social', 'runecrafting', 'dungeoneering'].includes(skill)
+            : ['social', 'runecrafting', 'dungeoneering', 'slayer_vampire'].includes(skill)
             ? skill
             : skill === 'slayer'
             ? skill
