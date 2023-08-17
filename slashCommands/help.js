@@ -9,7 +9,7 @@ module.exports = {
     options: [],
     async execute(discordClient, interaction) {try{
 
-	let ingameCommandsList = fs.readdirSync(process.cwd() + '/ingameCommands/').map(n => {
+	let ingameCommandsList = fs.readdirSync(process.cwd() + '/ingameCommands/').filter(c => c.endsWith('.js')).map(n => {
 		let c = require(process.cwd() + '/ingameCommands/' + n);
 		return `**!${c.name}${c.args ? " " + c.args : ""}** - ${c.description || "No description provided"}`;
 	});
@@ -30,7 +30,7 @@ module.exports = {
 				{name: "Ingame Commands", value: `*(can also be used in <#1052666581907406928>)*\n${ingameCommandsList.join("\n")}`}
 			)
 			.setColor('BLURPLE')
-			.setFooter({text: "Source created by Altpapier#4847, bot is maintained by let_game#7020"})
+			.setFooter({text: "Source created by @altpapier, upgraded and maintained by @notlet"})
             ],
         });
     } catch (e) {console.warn(e)}},

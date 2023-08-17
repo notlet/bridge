@@ -7,28 +7,22 @@ module.exports = {
     description: 'Get a player\'s skills and skill average.',
     args: '[ign] [profile]',
     execute: async (discordClient, message, messageAuthor) => {
-        if (config.ingameCommands.skills) {
-            let { 1: username, 2: profile } = message.split(' ');
+        let { 1: username, 2: profile } = message.split(' ');
+        if (!username) username = messageAuthor;
 
-            if (!username) username = messageAuthor;
+        const searchedPlayer = await getPlayer(username, profile).catch(err => minecraftClient.chat(`/gc @${messageAuthor} ${err}`));
+        if (!searchedPlayer?.memberData) return;
+        const playerProfile = searchedPlayer.memberData;
 
-            //const searchedPlayer = {memberData: require('../apitest.json').profiles[3].members["f164eb183b9943449ae10b2dcf9c9ff7"]};
+        const skills = getSkillAverage(playerProfile, 2);
 
-            const searchedPlayer = await getPlayer(username, profile).catch((err) => {
-                return minecraftClient.chat(`/gc @${messageAuthor} ${err}`);
-            });
-            if (!searchedPlayer?.memberData) return;
-            const playerProfile = searchedPlayer.memberData;
+        if (skills.average == 0) return minecraftClient.chat(`/gc @${messageAuthor}${messageAuthor === username ? "'s" : ` ${username}'s`} skills API is disabled.`);
 
-            const skills = getSkillAverage(playerProfile, 2);
+        const skillsMap = ["Farming", "Mining", "Combat", "Foraging", "Fishing", "Enchanting", "Alchemy", "Taming", "Carpentry"];
+        const part = `@${messageAuthor}${messageAuthor === username ? "'s" : ` ${username}'s`} SA is ${skills.average}. | `; 
+        
+        const out = short => part + skillsMap.map((s, i) => `${short ? s.substring(0, 2) : s}: ${skills.levels[i].fancy}`).join(' | ')
 
-            if (skills.average == 0) {
-                return minecraftClient.chat(`/gc @${messageAuthor}${messageAuthor === username ? "'s" : ` ${username}'s`} skills API is disabled.`);
-            }
-
-            minecraftClient.chat(`/gc @${messageAuthor}${messageAuthor === username ? "'s" : ` ${username}'s`} skill average is ${skills.average}. | Farming: ${skills.levels[0].fancy} | Mining: ${skills.levels[1].fancy} | Combat: ${skills.levels[2].fancy} | Foraging: ${skills.levels[3].fancy} | Fishing: ${skills.levels[4].fancy} | Enchanting: ${skills.levels[5].fancy} | Alchemy: ${skills.levels[6].fancy} | Taming: ${skills.levels[7].fancy}`);
-        }
+        minecraftClient.chat(`/gc ${out().length < 256 ? out() : out(true)}`);
     },
 };
-
-// const skills = ['farming', 'mining', 'combat', 'foraging', 'fishing', 'enchanting', 'alchemy', 'taming'];

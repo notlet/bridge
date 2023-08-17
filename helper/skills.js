@@ -25,7 +25,7 @@ function getSkillLevel(experience, { skill, decimals = 0, manualCap, totalExp } 
     let level = skillTables[table].filter((exp) => exp <= experience).length - 1;
     if (level >= maxLevel) {
 	    let maxLevelExp = skillTables[table][maxLevel];
-	    return {level: maxLevel, overflow: experience - maxLevelExp, fancy: totalExp ? `${maxLevel} (${numberformatter(experience, 2)} exp)` : `${maxLevel} + ${numberformatter(experience - maxLevelExp, 2)} exp`};
+	    return {level: maxLevel, overflow: experience - maxLevelExp, fancy: totalExp ? `${maxLevel} (${numberformatter(experience, 2)} xp)` : `${maxLevel} + ${numberformatter(experience - maxLevelExp, 2)} xp`};
     }
 
     if (decimals) {
@@ -35,7 +35,7 @@ function getSkillLevel(experience, { skill, decimals = 0, manualCap, totalExp } 
     }
 
     if (level < 0) return {level: 0, overflow: 0, fancy: `0`};
-    else return {level: level, overflow: 0, fancy: totalExp ? `${level} (${numberformatter(experience, 2)} exp)` : level};
+    else return {level: level, overflow: 0, fancy: totalExp ? `${level} (${numberformatter(experience, 2)} xp)` : level};
 }
 
 /**
@@ -59,7 +59,7 @@ function getNextLevelExperience({ level, experience }, { skill, manualCap } = {}
  * @returns {Number} skill average
  */
 function getSkillAverage(profileData, decimals = 0) {
-    const skills = ['farming', 'mining', 'combat', 'foraging', 'fishing', 'enchanting', 'alchemy', 'taming'];
+    const skills = ['farming', 'mining', 'combat', 'foraging', 'fishing', 'enchanting', 'alchemy', 'taming', 'carpentry'];
     const levels = skills.map((skill) => {
         const manualCap = skill === 'farming' && profileData.jacob2?.perks.farming_level_cap > -1 ? 50 + profileData.jacob2?.perks.farming_level_cap : null;
         return getSkillLevel(profileData[`experience_skill_${skill}`], { skill, decimals, manualCap });
