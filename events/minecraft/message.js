@@ -97,70 +97,50 @@ module.exports = {
             } catch (e) {}
             return;
         }
-        if ((msgString.startsWith('Guild >') || msgString.startsWith('Officer')) && msgString.includes(':')) {
+        
+        const msgRegex = /^(?:Guild|Officer) >(?: \[[A-Za-z+]+\])? ([a-zA-Z0-9_]{3,20})(?: \[[A-Za-z]+\])?: (.+)$/;
+        if ((msgString.startsWith("Guild") || msgString.startsWith("Officer")) && msgRegex.test(msgString)) {
             const { react } = require('../discord/messageCreate.js');
-
-            const splitMessage = msgString.split(' ');
-            const index = msgString.indexOf(':');
-            const sentMsg = msgString.substring(index + 2);
-            const messageAuthor = splitMessage[2]?.includes('[') ? splitMessage[3]?.replace(':', '') : splitMessage[2]?.replace(':', '');
+            const match = msgString.match(msgRegex);
+            const messageAuthor = match[1];
+            const sentMsg = match[2];
 
             // INGAME COMMANDS
             if (sentMsg.trim().startsWith('!')) {
                 const cmd = sentMsg.trim().split(' ')[0].substring(1);
                 const command = minecraftClient?.commands?.get(cmd === 'nw' ? 'networth' : cmd);
-                if (command) {
-                    command.execute(discordClient, sentMsg, messageAuthor);
-                }
+                if (command) command.execute(discordClient, sentMsg, messageAuthor);
             }
 
-            if (splitMessage[2]?.includes(config.minecraft.ingameName) || splitMessage[3]?.includes(config.minecraft.ingameName)) {
-                try {
-                    react(nodeemoji.emojify(sentMsg.split(" ✎ ").length > 0 ? sentMsg.split(" ✎ ").slice(0, -1).join(" ✎ ") : sentMsg, n => ":" + name + ":"), '✅');
-                } catch (e) {}
+            if (messageAuthor == config.minecraft.ingameName) {
+                const bridgeMatch = /^(.+?)(?: \[[A-Za-z]+\])?: (.+)(?: ┇ https:\/\/cdn\.discordapp\.com\/.+)?$/;
+                const bridgeAuthor = bridgeMatch[1];
+                const bridgeSentMsg = bridgeMatch[2];
 
+                try { react(nodeemoji.emojify(sentMsg, n => ":" + name + ":"), '✅') } catch (e) {}
                 if (!sentMsg.startsWith('@')) return;
-            }
-
-            let includedURLs = [];
-            for (const url of sentMsg.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g) ||
-                []) {
-                if (await isValidLink(url)) {
-                    includedURLs.push(url);
-                }
             }
 
             if (msgString.startsWith('Guild')) {
                 const bridgeChannel = discordClient.channels.cache.get(config.channels.guildIngameChat);
                 if (bridgeChannel) {
-                    //console.log(msgStringColor, messageAuthor);
                     let msgtosend = msgStringColor.substring(10)
-                    if (messageAuthor == config.minecraft.ingameName && msgString.match(new RegExp(`^Guild > ${config.minecraft.ingameName} \\[[\\w\\d]+\\]: @`, "i"))) {
-			//console.log(msgtosend)
-			//console.log(msgtosend.match(/@([\S]+)/))
-			//console.log(msgtosend.match(/@([\S]+)'s/))
-			msgtosend = `§2C > §e${msgtosend.match(/@([^\s'@]+)/)[1]}§f: ${msgtosend.match(/@([^\s'@]+)'s/) ? msgtosend.match(/@(.+)/)[1] : msgtosend.match(/@[^\s'@]+ (.+)/)[1]}`;
-			msgtosend = msgtosend.replaceAll(" | ", "\n§8 - §f");
+                    if (messageAuthor == config.minecraft.ingameName && sentMsg.startsWith("@")) {
+                        msgtosend = `§2C > §e${msgtosend.match(/@([^\s'@]+)/)[1]}§f: ${msgtosend.match(/@([^\s'@]+)'s/) ? msgtosend.match(/@(.+)/)[1] : msgtosend.match(/@[^\s'@]+ (.+)/)[1]}`;
+                        msgtosend = msgtosend.replaceAll(" | ", "\n§8 - §f");
                     }
-                    await bridgeChannel.send({
-                        files: [new MessageAttachment(generateMessageImage(msgtosend), `${messageAuthor}.png`)],
-                    });
 
-                    if (includedURLs.length > 0) {
-                        await bridgeChannel.send({ content: includedURLs.join('\n'), allowedMentions: { parse: [] } });
-                    }
+                    await bridgeChannel.send({ files: [new MessageAttachment(generateMessageImage(msgtosend), `${messageAuthor}.png`)] });
+
+                    const includedURLs = sentMsg.match(/[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/ig)?.map(l => l.endsWith('.') ? l.slice(0, -1) : l) || [];
+                    if (includedURLs.length > 0) await bridgeChannel.send({ content: includedURLs.join('\n'), allowedMentions: { parse: [] } });
                 }
             } else {
                 if (config.channels.officerIngameChat) {
                     const officerChannel = discordClient.channels.cache.get(config.channels.officerIngameChat);
                     if (officerChannel) {
-                        await officerChannel.send({
-                            files: [new MessageAttachment(generateMessageImage(msgStringColor.substring(12)), `${messageAuthor}.png`)],
-                        });
-
-                        if (includedURLs.length > 0) {
-                            await officerChannel.send({ content: includedURLs.join('\n'), allowedMentions: { parse: [] } });
-                        }
+                        await officerChannel.send({ files: [new MessageAttachment(generateMessageImage(msgStringColor.substring(12)), `${messageAuthor}.png`)] });
+                        if (includedURLs.length > 0) await officerChannel.send({ content: includedURLs.join('\n'), allowedMentions: { parse: [] } });
                     }
                 }
             }
@@ -337,18 +317,4 @@ async function queue(minecraftClient) {
     if (index > -1) fragBotQueue.splice(index, 1);
     await minecraftClient.chat('/p leave');
     isInFragParty = false;
-}
-
-async function isValidLink(url) {
-    if (url.includes('http') || url.includes('https')) {
-        try {
-            const res = await axios.get(url);
-            if (res.status === 200) {
-                return true;
-            }
-        } catch (e) {
-            return false;
-        }
-    }
-    return false;
 }

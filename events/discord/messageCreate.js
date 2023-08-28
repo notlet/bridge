@@ -7,7 +7,7 @@ const fs = require('fs');
 module.exports = {
 	execute: async (discordClient, message) => {
 		if (message.author.bot) return;
-		if (blacklist.users.includes(message.author.id)) return;
+		// if (blacklist.users.includes(message.author.id)) return;
 
 		let attachments = message.attachments;
 		
@@ -22,7 +22,7 @@ module.exports = {
 		if (message.channelId === config.channels.ingameChatLog && message.content.startsWith("/") && !message.content.includes("coop")) {
 			return minecraftClient.chat(message.content);
 		} else if (message.channelId === config.channels.guildIngameChat || message.channelId === config.channels.officerIngameChat) {
-            //if (message.flags.toArray().includes('SUPPRESS_NOTIFICATIONS')) return;
+            if (message.flags.toArray().includes('SUPPRESS_NOTIFICATIONS')) return;
 			const command = message.channelId === config.channels.officerIngameChat ? '/oc' : '/gc';
 			const linkedPlayers = JSON.parse(fs.readFileSync('./data/guildLinks.json'));
 			let playerRank;
@@ -31,9 +31,7 @@ module.exports = {
 				const allRanks = JSON.parse(fs.readFileSync('./data/guildRanks.json'));
 				playerRank = allRanks[linkedPlayers[message.author.id]];
 
-				if (linkUsernames[message.author.id]) {
-					message.author.username = linkUsernames[message.author.id];
-				}
+				if (linkUsernames[message.author.id]) message.author.username = linkUsernames[message.author.id];
 			}
 
 			let messagePrefix = `${command} ${message.author.username}${playerRank ? " [" + playerRank + "]" : ""}: `;
@@ -49,9 +47,7 @@ module.exports = {
 							messagesReactionCache.set(mentionedMessage);
 						}
 					}
-				} else {
-					messagePrefix = `${command} ${message.author.username} replied to ${repliedUser.username}: `;
-				}
+				} else messagePrefix = `${command} ${message.author.username} replied to ${repliedUser.username}: `;
 			}
 
 			message.content = await formatMentions(discordClient, message.content);
@@ -59,18 +55,12 @@ module.exports = {
 			let msg = (messagePrefix + message.content).substring(0, 256);
 
 			if ((messagePrefix + message.content).length >= 256) {
-				const toDelete = await message.reply('This message was too long. Sending only the first 256 characters.');
-				setTimeout(async () => {
-					await toDelete.delete();
-				}, 5000);
+				const toDelete = await message.reply(`This message was too long. Sending only the first 256 characters.\n(until \`...${(messagePrefix + message.content).substring(0, 256).slice(-25)}\`)`);
+				setTimeout(async () => await toDelete.delete(), 5000);
 			}
 			if (config.options.messageSentConfirmation.failedReactions) {
 				messagesReactionCache.set(msg.substring(4), message);
-				setTimeout(() => {
-					if (messagesReactionCache.get(msg.substring(4))) {
-						react(msg.substring(4), '⛔');
-					}
-				}, 1000 * 3);
+				setTimeout(() => { if (messagesReactionCache.get(msg.substring(4))) react(msg.substring(4), '⛔') }, 1000 * 3);
 			}
 
 			if (message.content.trim().startsWith('!')) {
@@ -81,12 +71,10 @@ module.exports = {
 				}
 			}
 
-			if (attachments.length > 0 && (messagePrefix + (msg + " ✎ " + attachments.join(" ")).trim()).length >= 256) {
+			if (attachments.length > 0 && (messagePrefix + (msg + " ┇ " + attachments.join(" ")).trim()).length >= 256) {
 				const toDelete2 = await message.reply('This message was too long. Skipping sending attachments.');
-				setTimeout(async () => {
-					await toDelete2.delete();
-				}, 5000);
-			} else if (attachments.length > 0) msg = (msg + " ✎ " + attachments.join(" ")).trim()
+				setTimeout(async () => await toDelete2.delete(), 5000);
+			} else if (attachments.length > 0) msg = (msg + " ┇ " + attachments.join(" ")).trim()
 
 			minecraftClient.chat(msg);
 		}
@@ -94,23 +82,15 @@ module.exports = {
 		async function react(messageSent, reaction) {
 			if (config.options.messageSentConfirmation.checkmarkReactions || config.options.messageSentConfirmation.failedReactions) {
 				let message = messagesReactionCache.get(messageSent);
-				if (!messageSent) {
-					message = Array.from(messagesReactionCache)?.[(messagesReactionCache?.size || 0) - 1]?.[1];
-				}
+
+				if (!messageSent) message = Array.from(messagesReactionCache)?.[(messagesReactionCache?.size || 0) - 1]?.[1];
 				if (message) {
-					if (
-						(config.options.messageSentConfirmation.checkmarkReactions && reaction === '✅') ||
-						(config.options.messageSentConfirmation.failedReactions && reaction === '⛔')
-					) {
-						if (!message.reactions.cache.hasAny('✅', '⛔')) message.react(reaction);
-					}
+					if ((config.options.messageSentConfirmation.checkmarkReactions && reaction === '✅') || (config.options.messageSentConfirmation.failedReactions && reaction === '⛔')) if (!message.reactions.cache.hasAny('✅', '⛔')) message.react(reaction);
 					messagesReactionCache.delete(messageSent);
 				}
 			}
 		}
 
-		module.exports = {
-			react,
-		};
+		module.exports = { react };
 	},
 };
