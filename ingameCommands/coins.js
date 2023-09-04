@@ -11,6 +11,8 @@ module.exports = {
 
         const searchedPlayer = await getPlayer(username, profile, true).catch((err) => minecraftClient.chat(`/gc @${messageAuthor} ${err}`));
 	    if (!searchedPlayer?.memberData) return;
+        username = searchedPlayer.username;
+        
         const coins = searchedPlayer.memberData.coin_purse;
         const bank = searchedPlayer.profileData.banking.balance;
 

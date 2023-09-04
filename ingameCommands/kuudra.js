@@ -10,6 +10,8 @@ module.exports = {
         if (!username) username = messageAuthor;
 
         const searchedPlayer = await getPlayer(username, profile, true).catch((err) => minecraftClient.chat(`/gc @${messageAuthor} ${err}`));
+        username = searchedPlayer.username;
+        
 	    if (!searchedPlayer?.memberData?.nether_island_player_data) return;
         const kuudra = searchedPlayer.memberData.nether_island_player_data.kuudra_completed_tiers;
         const tiers = ["none", "hot", "burning", "fiery", "infernal"].map((t, i) => `T${i + 1}: ${numberformatter(kuudra[t], 2)} comps, highest wave: ${kuudra[`highest_wave_${t}`] || 0}`);

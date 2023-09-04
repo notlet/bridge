@@ -22,7 +22,7 @@ module.exports = {
             calculation.reply = String(e);
             calculation.success = false;
         } finally {
-            minecraftClient.chat(`/gc @${messageAuthor} ${calculation.success ? "✓" : "✕"} ${calculation.reply.replace(/\./g, " .")}`);
+            minecraftClient.chat(`/gc @${messageAuthor} ${calculation.success ? "✓" : "✕"} ${calculation.reply}`);
         }
     } 
 }

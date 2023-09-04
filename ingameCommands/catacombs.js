@@ -8,14 +8,11 @@ module.exports = {
     args: '[ign] [profile]',
     execute: async (discordClient, message, messageAuthor) => {
         let { 1: username, 2: profile } = message.split(' ');
-
         if (!username) username = messageAuthor;
 
-	//const searchedPlayer = {memberData: require('../apitest.json').profiles[3].members["f164eb183b9943449ae10b2dcf9c9ff7"]};
-
-        const searchedPlayer = await getPlayer(username, profile, true).catch((err) => {
-            return minecraftClient.chat(`/gc @${messageAuthor} ${err}`);
-        });
+        const searchedPlayer = await getPlayer(username, profile, true).catch((err) => minecraftClient.chat(`/gc @${messageAuthor} ${err}`));
+        username = searchedPlayer.username;
+        
 	    if (!searchedPlayer?.memberData?.dungeons) return;
         const dungeons = searchedPlayer.memberData.dungeons
 
@@ -31,8 +28,8 @@ module.exports = {
         const currClass = dungeons.selected_dungeon_class;
         const currClassFancy = currClass[0].toUpperCase() + currClass.substring(1);
 
-	const secrets = searchedPlayer.playerData ? numberformatter(searchedPlayer.playerData.achievements.skyblock_treasure_hunter, 2) : "<API ERROR>";
-	//const secrets = 69
+	    const secrets = searchedPlayer.playerData ? numberformatter(searchedPlayer.playerData.achievements.skyblock_treasure_hunter, 2) : "<API ERROR>";
+
         minecraftClient.chat(`/gc @${messageAuthor}${messageAuthor === username ? "'s" : ` ${username}'s`} catacombs level is ${cataLvl} | Selected Class - ${currClassFancy} ${classes[currClass]} | Class Levels: T${classes.tank}, A${classes.archer}, B${classes.berserk}, M${classes.mage}, H${classes.healer} | Total Secrets found: ${secrets}`);
     },
 };

@@ -11,9 +11,8 @@ module.exports = {
 
         if (!username) username = messageAuthor;
 
-        const searchedPlayer = await getPlayer(username, profile).catch((err) => {
-            return minecraftClient.chat(`/gc @${messageAuthor} ${err}`);
-        });
+        const searchedPlayer = await getPlayer(username, profile).catch((err) => minecraftClient.chat(`/gc @${messageAuthor} ${err}`));
+        username = searchedPlayer.username;
 
 	    if (!searchedPlayer?.memberData?.slayer_bosses) return;
         const memberData = searchedPlayer.memberData;
