@@ -1,0 +1,13 @@
+version: '3'
+services:
+  bridgebot:
+    build: .
+    image: bridge
+    container_name: bridgebot
+    restart: always
+    working_dir: /usr/src/app
+    command: ["yarn", "start"]
+    volumes:
+      - /home/eye/bridge:/usr/src/app
+    environment:
+      NODE_ENV: production
