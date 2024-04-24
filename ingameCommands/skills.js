@@ -7,24 +7,29 @@ module.exports = {
     description: 'Get a player\'s skills and skill average.',
     args: '[ign] [profile]',
     execute: async (discordClient, message, messageAuthor) => {
-        let { 1: username, 2: profile } = message.split(' ');
-        if (!username) username = messageAuthor;
+        if (config.ingameCommands.skills) {
+            let { 1: username, 2: profile } = message.split(' ');
 
-        const searchedPlayer = await getPlayer(username, profile).catch(err => minecraftClient.chat(`/gc @${messageAuthor} ${err}`));
-        username = searchedPlayer.username;
-        
-        if (!searchedPlayer?.memberData) return;
-        const playerProfile = searchedPlayer.memberData;
+            if (!username) username = messageAuthor;
 
-        const skills = getSkillAverage(playerProfile, 2);
+            const searchedPlayer = await getPlayer(username, profile).catch((err) => {
+                return minecraftClient.chat(`/gc @${messageAuthor} ${err}`);
+            });
+            if (!searchedPlayer) return;
+            const playerProfile = searchedPlayer.memberData;
 
-        if (skills.average == 0) return minecraftClient.chat(`/gc @${messageAuthor}${messageAuthor === username ? "'s" : ` ${username}'s`} skills API is disabled.`);
+            const skills = getSkillAverage(playerProfile, 2);
 
-        const skillsMap = ["Farming", "Mining", "Combat", "Foraging", "Fishing", "Enchanting", "Alchemy", "Taming", "Carpentry"];
-        const part = `@${messageAuthor}${messageAuthor === username ? "'s" : ` ${username}'s`} SA is ${skills.average}. | `; 
-        
-        const out = short => part + skillsMap.map((s, i) => `${short ? s.substring(0, 2) : s}: ${skills.levels[i].fancy}`).join(' | ')
+            if (skills == 0) {
+                return minecraftClient.chat(`/gc @${messageAuthor}${messageAuthor === username ? "'s" : ` ${username}'s`} skills API is disabled.`);
+            }
 
-        minecraftClient.chat(`/gc ${out().length < 256 ? out() : out(true)}`);
+            const skillsMap = ["Farming", "Mining", "Combat", "Foraging", "Fishing", "Enchanting", "Alchemy", "Taming", "Carpentry"];
+            const part = `@${messageAuthor}${messageAuthor === username ? "'s" : ` ${username}'s`} SA is ${skills.average}. | `; 
+            
+            const out = short => part + skillsMap.map((s, i) => `${short ? s.substring(0, 2) : s}: ${skills.levels[i].fancy}`).join(' | ')
+    
+            minecraftClient.chat(`/gc ${out().length < 256 ? out() : out(true)}`);
+        }
     },
 };

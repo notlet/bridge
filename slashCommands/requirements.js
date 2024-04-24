@@ -1,5 +1,5 @@
 const { getRequirements, getRequirementEmbed, LONG_STATS } = require('../helper/requirements.js');
-const { nameToUUID, createCollector, n, getGuildMemberData } = require('../helper/functions.js');
+const { nameToUUID, createCollector, n, addCommas } = require('../helper/functions.js');
 const { Constants, MessageButton, MessageActionRow, MessageEmbed } = require('discord.js');
 const { STRING } = Constants.ApplicationCommandOptionTypes;
 const { errorEmbed } = require('../helper/embeds.js');
@@ -26,17 +26,10 @@ module.exports = {
         const uuid = await nameToUUID(player);
         if (uuid) {
             const requirementData = await getRequirements(uuid).catch((err) => {
-                //return interaction.editReply({ embeds: [errorEmbed(null, err)] });
+                return interaction.editReply({ embeds: [errorEmbed(null, err.message)] });
             });
-            if (!requirementData?.level) { console.log(requirementData) ; return interaction.editReply({ embeds: [errorEmbed(null, "Couldn't get a response from the API.")] })};
 
-            const playerData = await getGuildMemberData(player).catch((err) => {});
-            const discordLink = playerData?.player?.socialMedia?.links?.DISCORD;
-            let guild = await discordClient?.guilds?.cache?.get("900248439907041290")?.members?.fetch()
-            let user = guild?.find(u => `${u?.user?.username}#${u?.user?.discriminator}` == (discordLink || undefined));
-            let overLevel10 = user?.roles?.cache?.has("1103722129075220561");
-
-            const requirementEmbed = getRequirementEmbed(requirementData, player, false, discordLink, user, overLevel10);
+            const requirementEmbed = getRequirementEmbed(requirementData, player, false, uuid);
 
             const reply = await interaction.editReply({ embeds: [requirementEmbed], components: [REQUIREMENT_BUTTON] });
 
@@ -57,10 +50,10 @@ module.exports = {
                                         });
                                         return `**${LONG_STATS[name]}**: \`${map.join('/')}\``;
                                     } else if (!isNaN(value)) {
-                                        return `**${LONG_STATS[name]}**: \`${value}\``;
+                                        return `**${LONG_STATS[name]}**: \`${addCommas(value)}\``;
                                     }
                                 })
-                                .join('\n') + '\n**Be in this Server.**\n**MEE6 Level**: \`10+\`'}
+                                .join('\n')}
                         `)
                             ),
                         ],

@@ -36,7 +36,7 @@ module.exports = {
                             1. Click on \`My Profile (Right Click)\` in a Hypixel lobby
                             2. Click on \`Social Media\`
                             3. Left-click on \`Discord\`
-                            4. Paste this in the Minecraft ingame chat: \`${tag}\``
+                            4. Paste this in the Minecraft ingame chat: \`${interaction.user.tag}\``
                         )
                     ),
                 ],

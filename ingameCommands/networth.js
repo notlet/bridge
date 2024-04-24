@@ -1,6 +1,6 @@
 const { getNetworth } = require('skyhelper-networth');
 const config = require('../config.json');
-const { getPlayer, numberformatter } = require('../helper/functions.js');
+const { getPlayer, getMuseum, numberformatter } = require('../helper/functions.js');
 const funnynetworth = require('../funnynetworth.js');
 
 module.exports = {
@@ -13,10 +13,17 @@ module.exports = {
 
             if (!username) username = messageAuthor;
 
-            const searchedPlayer = await getPlayer(username, profile).catch((err) => minecraftClient.chat(`/gc @${messageAuthor} ${err}`));
-            username = searchedPlayer.username;
+            const searchedPlayer = await getPlayer(username, profile).catch((err) => {
+                return minecraftClient.chat(`/gc @${messageAuthor} ${err}`);
+            });
+            if (!searchedPlayer) return;
 
-            const networth = await getNetworth(searchedPlayer.memberData, searchedPlayer.profileData?.banking?.balance, { onlyNetworth: true });
+            const searchedMuseum = await getMuseum(searchedPlayer.profileData.profile_id, searchedPlayer.uuid);
+
+            const networth = await getNetworth(searchedPlayer.memberData, searchedPlayer.profileData?.banking?.balance || 0, {
+                onlyNetworth: true,
+                museumData: searchedMuseum,
+            });
 
             if (networth.noInventory) {
                 return minecraftClient.chat(

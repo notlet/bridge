@@ -1,4 +1,5 @@
 const Canvas = require('canvas');
+const config = require('../config.json');
 Canvas.registerFont('./fonts/MinecraftRegular-Bmg3.ttf', { family: 'Minecraft' });
 Canvas.registerFont('./fonts/unifont.ttf', { family: 'MinecraftUnicode' });
 
@@ -21,50 +22,50 @@ const RGBA_COLOR = {
     f: 'rgba(255,255,255,1)',
 };
 
-function getHeight(message, cwidth) {
+const multiplier = config?.options?.imageSizeMultiplier || 1;
+
+function getHeight(message) {
     const canvas = Canvas.createCanvas(1, 1);
     const ctx = canvas.getContext('2d');
-    let splitMessageSpace = message.split(' ');
+    const splitMessageSpace = message.split(' ');
     for (const [i, msg] of Object.entries(splitMessageSpace)) {
         if (!msg.startsWith('§')) splitMessageSpace[i] = `§r${msg}`;
     }
-    splitMessageSpace = splitMessageSpace.join(' ').replaceAll('\n', '\nn').split(' ');
     const splitMessage = splitMessageSpace.join(' ').split(/§|\n/g);
     splitMessage.shift();
-    ctx.font = '40px Minecraft, MinecraftUnicode';
+    ctx.font = `${(40 * multiplier).toFixed()}px Minecraft, MinecraftUnicode`;
 
     let width = 5;
-    let height = 35;
+    let height = 35 * multiplier;
 
     for (const msg of splitMessage) {
         const currentMessage = msg.substring(1);
-        if (width + ctx.measureText(currentMessage).width > (cwidth || 1300) || msg.charAt(0) === 'n') {
+        if (width + ctx.measureText(currentMessage).width > 1000 || msg.charAt(0) === 'n') {
             width = 5;
-            height += 40;
+            height += 40 * multiplier;
         }
         width += ctx.measureText(currentMessage).width;
     }
-    if (width == 5) height -= 40;
+    if (width == 5) height -= 40 * multiplier;
 
-    return height + 10;
+    return height + (10 * multiplier);
 }
 
-function generateMessageImage(message, cwidth, background) {
-    const canvasHeight = getHeight(message, cwidth || undefined);
-    const canvas = Canvas.createCanvas(cwidth || 1300, background ? canvasHeight + 20 : canvasHeight);
+function generateMessageImage(message) {
+    const canvasHeight = getHeight(message);
+    const canvas = Canvas.createCanvas(1000, canvasHeight);
     const ctx = canvas.getContext('2d');
-    let splitMessageSpace = message.split(' ');
+    const splitMessageSpace = message.split(' ');
     for (const [i, msg] of Object.entries(splitMessageSpace)) {
         if (!msg.startsWith('§')) splitMessageSpace[i] = `§r${msg}`;
     }
-    splitMessageSpace = splitMessageSpace.join(' ').replaceAll('\n', '\nn').split(' ');
     const splitMessage = splitMessageSpace.join(' ').split(/§|\n/g);
     splitMessage.shift();
-    
-    ctx.shadowOffsetX = 4;
-    ctx.shadowOffsetY = 4;
+    ctx.shadowOffsetX = 4 * multiplier;
+    ctx.shadowOffsetY = 4 * multiplier;
     ctx.shadowColor = '#131313';
-    ctx.font = '40px Minecraft, MinecraftUnicode';
+    ctx.font = `${(40 * multiplier).toFixed()}px Minecraft, MinecraftUnicode`;
+        ctx.font = '40px Minecraft, MinecraftUnicode';
 
     if (background) {
         ctx.globalAlpha = 0.3;
@@ -78,19 +79,20 @@ function generateMessageImage(message, cwidth, background) {
         ctx.fillStyle = 'white';
     }
 
+
     let width = 5;
-    let height = 35;
+    let height = 35 * multiplier;
     for (const msg of splitMessage) {
         const colorCode = RGBA_COLOR[msg.charAt(0)];
         const currentMessage = msg.substring(1);
-        if (width + ctx.measureText("  " + currentMessage).width > (cwidth || 1300) || msg.charAt(0) === 'n') {
+        if (width + ctx.measureText(currentMessage).width > 1000 || msg.charAt(0) === 'n') {
             width = 5;
-            height += 40;
+            height += 40 * multiplier;
         }
         if (colorCode) {
             ctx.fillStyle = colorCode;
         }
-        ctx.fillText("  " + currentMessage, width, background ? height + 10 : height);
+        ctx.fillText(currentMessage, width, height);
         width += ctx.measureText(currentMessage).width;
     }
     return canvas.toBuffer();

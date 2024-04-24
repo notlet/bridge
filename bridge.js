@@ -1,9 +1,6 @@
-const { CronJob } = require('cron');
-const fs = require('fs');
-const djs = require('discord.js');
-const { numberformatter } = require('./helper/functions.js');
-const discordClient = new djs.Client({
-    intents: [djs.Intents.FLAGS.GUILDS, djs.Intents.FLAGS.GUILD_MESSAGES, djs.Intents.FLAGS.GUILD_MESSAGE_REACTIONS, djs.Intents.FLAGS.GUILD_MEMBERS],
+const { Client, Intents } = require('discord.js');
+const discordClient = new Client({
+    intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.GUILD_MEMBERS],
 });
 
 const config = require('./config.json');

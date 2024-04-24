@@ -1,5 +1,4 @@
 const { skillTables } = require('../constants/global.js');
-const { numberformatter } = require('./functions.js');
 
 function getTableAndMax(skill, manualCap) {
     const table =

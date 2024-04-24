@@ -1,5 +1,5 @@
 const config = require('../config.json');
-const { getPlayer } = require('../helper/functions.js');
+const { getPlayer, toFixed } = require('../helper/functions.js');
 
 module.exports = {
     name: 'level',
@@ -10,14 +10,16 @@ module.exports = {
 
         if (!username) username = messageAuthor;
 
-        const searchedPlayer = await getPlayer(username, profile).catch((err) => minecraftClient.chat(`/gc @${messageAuthor} ${err}`));
-        username = searchedPlayer.username;
-
+        const searchedPlayer = await getPlayer(username, profile).catch((err) => {
+            return minecraftClient.chat(`/gc @${messageAuthor} ${err}`);
+        });
+        if (!searchedPlayer) return;
         const playerProfile = searchedPlayer.memberData;
-        if (!playerProfile || !playerProfile.leveling || !playerProfile.leveling.experience) {
-            return minecraftClient.chat(`/gc @${messageAuthor}${messageAuthor === username ? "'s" : ` ${username}'s`} skyblock level was unable to be fetched.`);
-        }
 
-        minecraftClient.chat(`/gc @${messageAuthor}${messageAuthor === username ? "'s" : ` ${username}'s`} skyblock level is ${parseFloat(playerProfile.leveling.experience / 100).toFixed(2)}.`);
+        minecraftClient.chat(
+            `/gc @${messageAuthor}${messageAuthor === username ? "'s" : ` ${username}'s`} level is ${Number(
+                toFixed((playerProfile.leveling?.experience || 0) / 100, 2)
+            )}.`
+        );
     },
 };

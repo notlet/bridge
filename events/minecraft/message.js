@@ -5,16 +5,18 @@ const config = require('../../config.json');
 const { formatDiscordMessage, includesIgnored, isGuildEvent, isShortGuildEvent, sleep, nameToUUID, addCommas, getGuildMemberData } = require('../../helper/functions.js');
 const generateMessageImage = require('../../helper/messageToImage.js');
 const { getRequirements, getRequirementEmbed } = require('../../helper/requirements.js');
-const nodeemoji = require('node-emoji')
 
 const SHORT_STATS = {
+    skyblockLevel: 'LVL',
+    networth: 'NW',
     lilyWeight: 'LILY',
     senitherWeight: 'SEN',
     skillAverage: 'SA',
     hypixelLevel: 'HLVL',
     catacombs: 'CATA',
     slayer: 'SLAYER',
-    level: 'SBLVL'
+    bwLevel: 'BWSTARS',
+    bwFKDR: 'BWFKDR',
 };
 
 let messagesCache = [];
@@ -46,18 +48,18 @@ module.exports = {
     async execute(discordClient, message) {
         const msgString = message.toString();
         let msgStringColor = message.toMotd();
-	if (msgString.startsWith("Guild > ")) { //§2Guild > §b[MVP§2+§b] let_game §3[Summon]§f: i love amomger
-		let match = msgStringColor.substr(10).match(/(§[a-f0-9]{1})(\[[§A-Za-z0-9\+]+\] )?([0-9A-Za-z_]{3,22})/i);
-		//console.log(match);
-		if (match) {
-			const funnynames = require('../../funnynames.js');
-			//console.log(funnynames, Object.keys(funnynames))
-			if (Object.keys(funnynames).includes(match[3].trim()) && !nonBomb.active) msgStringColor = msgStringColor.replace(match[0], funnynames[match[3].trim()](match[1], match[2], match[3]));
-            if (Math.round(Date.now() / 1000) - nonBomb.lastUsed > 300 && nonBomb.active) nonBomb.active = false; 
-            if (nonBomb.active) msgStringColor = msgStringColor.replace(match[0], funnynames["non_bomb"](match[1], match[2], match[3]));
-		}
-	}
-	if (msgString.match(/.+❤.+✎ Mana/)) return;
+        if (msgString.startsWith("Guild > ")) { //§2Guild > §b[MVP§2+§b] let_game §3[Summon]§f: i love amomger
+            let match = msgStringColor.substr(10).match(/(§[a-f0-9]{1})(\[[§A-Za-z0-9\+]+\] )?([0-9A-Za-z_]{3,22})/i);
+            //console.log(match);
+            if (match) {
+                const funnynames = require('../../funnynames.js');
+                //console.log(funnynames, Object.keys(funnynames))
+                if (Object.keys(funnynames).includes(match[3].trim()) && !nonBomb.active) msgStringColor = msgStringColor.replace(match[0], funnynames[match[3].trim()](match[1], match[2], match[3]));
+                if (Math.round(Date.now() / 1000) - nonBomb.lastUsed > 300 && nonBomb.active) nonBomb.active = false; 
+                if (nonBomb.active) msgStringColor = msgStringColor.replace(match[0], funnynames["non_bomb"](match[1], match[2], match[3]));
+            }
+        }
+        if (msgString.match(/.+❤.+✎ Mana/)) return;
         // LIMBO CHECK
         try {
             const parsedMessage = JSON.parse(msgString);
@@ -119,6 +121,14 @@ module.exports = {
 
                 try { react(sentMsg, '✅') } catch (e) {}
                 if (!sentMsg.startsWith('@')) return;
+            }
+
+            let includedURLs = [];
+            for (const url of sentMsg.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g) ||
+                []) {
+                if (await isValidLink(url)) {
+                    includedURLs.push(url);
+                }
             }
 
             if (msgString.startsWith('Guild')) {
@@ -191,7 +201,9 @@ module.exports = {
                             let overLevel10 = user?.roles?.cache?.has("1103722129075220561");
 
                             let requirementsMet = 0;
-                            let requirementsDescription = "";
+                            let requirementsMetSkyblock = 0;
+                            let requirementsMetBedwars = 0;
+                            let requirementsDescription = `${username}: `;
                             for (const [stat, requirement] of Object.entries(config.guildRequirement.requirements)) {
                                 if (requirement instanceof Object && stat === 'slayer') {
                                     let slayerRequirementsMet = 0;
@@ -202,13 +214,18 @@ module.exports = {
                                         }
                                         slayerDescription.push(userRequirements.slayer[slayerType] || 0);
                                     }
-                                    if (slayerRequirementsMet >= Object.keys(requirement).length) requirementsMet++;
+                                    if (slayerRequirementsMet >= Object.keys(requirement).length) {
+                                        requirementsMet++;
+                                        requirementsMetSkyblock++;
+                                    }
                                     requirementsDescription += `${stat.toUpperCase()}: ${slayerDescription.join('/')} ${
                                         slayerRequirementsMet >= Object.keys(requirement).length ? '✔' : '✖'
                                     } |`;
                                 } else {
                                     if (userRequirements[stat] >= requirement) {
                                         requirementsMet++;
+                                        if (!stat.includes('bw')) requirementsMetSkyblock++;
+                                        else requirementsMetBedwars++;
                                         requirementsDescription += `${SHORT_STATS[stat]}: ${addCommas(userRequirements[stat]?.toFixed())} ✔ | `;
                                     } else {
                                         requirementsDescription += `${SHORT_STATS[stat]}: ${addCommas(userRequirements[stat]?.toFixed())} ✖ | `;
@@ -222,11 +239,26 @@ module.exports = {
                             minecraftClient.chat(`/oc ${username}: ${requirementsDescription}`);
                             await sleep(1000);
 
+                            let totalBwStats = 0;
+                            for (const stat of Object.keys(config.guildRequirement.requirements)) {
+                                if (stat.includes('bw')) {
+                                    totalBwStats++;
+                                }
+                            }
                             if (
-                                (requirementsMet >= (config.guildRequirement.minRequired || Object.keys(config.guildRequirement.requirements).length)) && (user && overLevel10)
+                                requirementsMet >=
+                                    (config.guildRequirement.minRequired || (Object.keys(config.guildRequirement.requirements).length) && (user && overLevel10)) ||
+                                (config.guildRequirement.acceptEitherSkyblockOrBedwars &&
+                                    (requirementsMetBedwars >= totalBwStats ||
+                                        requirementsMetSkyblock >= Object.keys(config.guildRequirement.requirements).length - totalBwStats))
                             ) {
                                 if (config.guildRequirement.autoAccept) {
-                                    minecraftClient.chat(command);
+                                    const blacklist = (config.guildRequirement.autoAcceptBlacklist || []).map((b) => b.toLowerCase());
+                                    if (blacklist.includes(uuid.toLowerCase()) || blacklist.includes(username.toLowerCase())) {
+                                        minecraftClient.chat(`/oc ${username} is blacklisted!`);
+                                    } else {
+                                        minecraftClient.chat(command);
+                                    }
                                 } else {
                                     minecraftClient.chat(`/oc ${username} meets the requirements!`);
                                 }
@@ -317,4 +349,18 @@ async function queue(minecraftClient) {
     if (index > -1) fragBotQueue.splice(index, 1);
     await minecraftClient.chat('/p leave');
     isInFragParty = false;
+}
+
+async function isValidLink(url) {
+    if (url.includes('http') || url.includes('https')) {
+        try {
+            const res = await axios.get(url);
+            if (res.status === 200) {
+                return true;
+            }
+        } catch (e) {
+            return false;
+        }
+    }
+    return false;
 }
