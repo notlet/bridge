@@ -1,4 +1,4 @@
-FROM node:16-alpine
+FROM node:18-alpine
 
 RUN apk add --update --no-cache \
     make \
@@ -12,7 +12,7 @@ RUN apk add --update --no-cache \
     automake
 
 WORKDIR /usr/src/app
-COPY package*.json ./
+COPY package.json yarn.lock ./
 RUN yarn install
 COPY . .
 
