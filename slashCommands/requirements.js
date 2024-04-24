@@ -34,9 +34,9 @@ module.exports = {
             const discordLink = playerData?.player?.socialMedia?.links?.DISCORD;
             let guild = await discordClient?.guilds?.cache?.get("900248439907041290")?.members?.fetch()
             let user = guild?.find(u => `${u?.user?.username}#${u?.user?.discriminator}` == (discordLink || undefined));
-            let overLevel15 = user?.roles?.cache?.has("904780894152327169");
+            let overLevel10 = user?.roles?.cache?.has("1103722129075220561");
 
-            const requirementEmbed = getRequirementEmbed(requirementData, player, false, discordLink, user, overLevel15);
+            const requirementEmbed = getRequirementEmbed(requirementData, player, false, discordLink, user, overLevel10);
 
             const reply = await interaction.editReply({ embeds: [requirementEmbed], components: [REQUIREMENT_BUTTON] });
 
@@ -60,7 +60,7 @@ module.exports = {
                                         return `**${LONG_STATS[name]}**: \`${value}\``;
                                     }
                                 })
-                                .join('\n') + '\n**Be in this Server.**\n**MEE6 Level**: \`15+\`'}
+                                .join('\n') + '\n**Be in this Server.**\n**MEE6 Level**: \`10+\`'}
                         `)
                             ),
                         ],

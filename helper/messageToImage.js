@@ -83,14 +83,14 @@ function generateMessageImage(message, cwidth, background) {
     for (const msg of splitMessage) {
         const colorCode = RGBA_COLOR[msg.charAt(0)];
         const currentMessage = msg.substring(1);
-        if (width + ctx.measureText(" " + currentMessage).width > (cwidth || 1300) || msg.charAt(0) === 'n') {
+        if (width + ctx.measureText("  " + currentMessage).width > (cwidth || 1300) || msg.charAt(0) === 'n') {
             width = 5;
             height += 40;
         }
         if (colorCode) {
             ctx.fillStyle = colorCode;
         }
-        ctx.fillText(" " + currentMessage, width, background ? height + 10 : height);
+        ctx.fillText("  " + currentMessage, width, background ? height + 10 : height);
         width += ctx.measureText(currentMessage).width;
     }
     return canvas.toBuffer();

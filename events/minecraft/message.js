@@ -117,7 +117,7 @@ module.exports = {
                 const bridgeAuthor = bridgeMatch[1];
                 const bridgeSentMsg = bridgeMatch[2];
 
-                try { react(nodeemoji.emojify(sentMsg, n => ":" + name + ":"), '✅') } catch (e) {}
+                try { react(sentMsg, '✅') } catch (e) {}
                 if (!sentMsg.startsWith('@')) return;
             }
 
@@ -188,7 +188,7 @@ module.exports = {
                             if (!discordLink) minecraftClient.chat(`/oc ${username} does not have a discord link!`);
                             let guild = await discordClient?.guilds?.cache?.get("900248439907041290")?.members?.fetch()
                             let user = guild?.find(u => `${u?.user?.username}#${u?.user?.discriminator}` == (discordLink || undefined));
-                            let overLevel15 = user?.roles?.cache?.has("904780894152327169");
+                            let overLevel10 = user?.roles?.cache?.has("1103722129075220561");
 
                             let requirementsMet = 0;
                             let requirementsDescription = "";
@@ -217,13 +217,13 @@ module.exports = {
                             }
 
                             requirementsDescription += `INSERVER: ${user ? "✔" : "✖"} | `
-                            requirementsDescription += `MEE6LV15: ${overLevel15 ? "✔" : "✖"} | `
+                            requirementsDescription += `MEE6LV10: ${overLevel10 ? "✔" : "✖"} | `
 
                             minecraftClient.chat(`/oc ${username}: ${requirementsDescription}`);
                             await sleep(1000);
 
                             if (
-                                (requirementsMet >= (config.guildRequirement.minRequired || Object.keys(config.guildRequirement.requirements).length)) && (user && overLevel15)
+                                (requirementsMet >= (config.guildRequirement.minRequired || Object.keys(config.guildRequirement.requirements).length)) && (user && overLevel10)
                             ) {
                                 if (config.guildRequirement.autoAccept) {
                                     minecraftClient.chat(command);
@@ -237,7 +237,7 @@ module.exports = {
                             }
 
                             const { sendDiscordMessage } = require('../discord/ready');
-                            const embed = getRequirementEmbed(userRequirements, username, true, discordLink, user, overLevel15);
+                            const embed = getRequirementEmbed(userRequirements, username, true, discordLink, user, overLevel10);
                             sendDiscordMessage({
                                 channelId: config.channels.officerIngameChat,
                                 messageObject: { embeds: [embed] },

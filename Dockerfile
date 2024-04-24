@@ -1,19 +1,17 @@
-FROM node:16-alpine
+# Use an official Node.js runtime as a parent image
+FROM node:20
 
-RUN apk add --update --no-cache \
-    make \
-    g++ \
-    jpeg-dev \
-    cairo-dev \
-    giflib-dev \
-    pango-dev \
-    libtool \
-    autoconf \
-    automake
+# Set the working directory in the container
+WORKDIR /usr/src/bridge
 
-WORKDIR /usr/src/app
-COPY package*.json ./
+# Copy package.json and package-lock.json to the working directory
+COPY package*.json yarn.lock ./
+
+# Install app dependencies
 RUN yarn install
+
+# Bundle app source
 COPY . .
 
-CMD [ "yarn", "start" ]
+# Define the command to run your application
+CMD ["yarn", "start"]
