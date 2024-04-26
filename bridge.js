@@ -1,8 +1,9 @@
+const fs = require('fs');
 const { Client, Intents } = require('discord.js');
 const discordClient = new Client({
     intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.GUILD_MEMBERS],
 });
-
+const { numberformatter } = require('./helper/functions.js');
 const config = require('./config.json');
 const mineflayer = require('mineflayer');
 
@@ -11,7 +12,7 @@ const minecraftLoginOptions = {
     port: 25565,
     username: config.minecraft.username,
     auth: config.minecraft.microsoftAuth ? 'microsoft' : 'mojang',
-    version: '1.8.9',
+    version: "1.8.9",
     viewDistance: 'tiny',
     chatLengthLimit: 256,
 };
@@ -20,9 +21,9 @@ const minecraftLoginOptions = {
 
 global.minecraftClient = mineflayer.createBot(minecraftLoginOptions);
 global.nonBomb = {lastUsed: 0, active: false};
-
+global.numberformatter = numberformatter; //im lazy
 global.blacklist = JSON.parse(fs.readFileSync(process.cwd() + "/data/blacklist.json", {encoding: "utf8"}));
-global.blacklistRefreshJob = new CronJob("*/5 * * * *", () => { blacklist = JSON.parse(fs.readFileSync(process.cwd() + "/data/blacklist.json", {encoding: "utf8"})) }, null, true);
+//global.blacklistRefreshJob = new CronJob("*/5 * * * *", () => { blacklist = JSON.parse(fs.readFileSync(process.cwd() + "/data/blacklist.json", {encoding: "utf8"})) }, null, true);
 
 startMinecraftBot(minecraftClient, discordClient);
 async function startMinecraftBot(minecraftClient, discordClient) {

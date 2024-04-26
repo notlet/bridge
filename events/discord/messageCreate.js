@@ -7,7 +7,7 @@ const fs = require('fs');
 module.exports = {
 	execute: async (discordClient, message) => {
 		if (message.author.bot) return;
-		// if (blacklist.users.includes(message.author.id)) return;
+		if (blacklist.users.includes(message.author.id)) return;
 
 		let attachments = message.attachments;
 		

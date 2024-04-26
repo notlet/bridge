@@ -8,6 +8,6 @@ services:
     working_dir: /usr/src/app
     command: ["yarn", "start"]
     volumes:
-      - /home/eye/bridge:/usr/src/app
+      - ./data:/usr/src/app/data
     environment:
       NODE_ENV: production
