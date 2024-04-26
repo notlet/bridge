@@ -1,3 +1,5 @@
+# This is my fork of [Altpapier/hypixel-discord-guild-bridge](https://github.com/Altpapier/hypixel-discord-guild-bridge), used on the [Necromancy discord server](https://discord.gg/necromancy).
+---
 # Hypixel Discord Guild Bridge
 
 If you have any suggestions or bugs you find using this bot, make sure to submit them [here](https://github.com/Altpapier/hypixel-discord-guild-bridge/issues)
