@@ -38,17 +38,17 @@ module.exports = {
             golden_fish: 'Golden',
             vanille: 'Vanille',
             sulphur_skitter: 'Skitter',
-            lava_horse: 'Lavahorse',
+            lava_horse: 'Lava',
             gusher: 'Gusher',
-            obfuscated_fish_1: 'Obfuscated1',
-            obfuscated_fish_2: 'Obfuscated2',
-            obfuscated_fish_3: 'Obfuscated3',
+            obfuscated_fish_1: 'Obf1',
+            obfuscated_fish_2: 'Obf2',
+            obfuscated_fish_3: 'Obf3',
             volcanic_stonefish: 'Stone',
-            mana_ray: 'Manaray',
+            mana_ray: 'Mana',
             steaming_hot_flounder: 'Flounder',
             flyfish: 'Fly',
-            moldfin: 'Moldfin',
-            skeleton_fish: 'Skeleton',
+            moldfin: 'Mold',
+            skeleton_fish: 'Skele',
             soul_fish: 'Soul',
             karate_fish: 'Karate',
         };
@@ -58,12 +58,14 @@ module.exports = {
             const fishType = fishTypeToMessage[key] 
             const tier = tierToValue[highestTiers[key]];
 
-            statsMessage += `${fishType}:${tier} `;
+            statsMessage += `,${fishType}:${tier} `;
         }
+        statsMessage = `/gc @${messageAuthor}${messageAuthor === username ? "'s" : ` ${username}'s`} trophy fish stats: ${statsMessage}`
 
-        minecraftClient.chat(
-            `/gc @${messageAuthor}${messageAuthor === username ? "'s" : ` ${username}'s`} trophy fish stats: ` + statsMessage
-        );
+        if (statsMessage.length > 256) {
+            statsMessage = statsMessage.substring(0, 256);
+        }
+        minecraftClient.chat(statsMessage);
     },
 };
 
@@ -71,4 +73,3 @@ compareTiers = (tier1, tier2) => {
     const tierOrder = ['bronze', 'silver', 'gold', 'diamond'];
     return tierOrder.indexOf(tier1) < tierOrder.indexOf(tier2);
 }
-
