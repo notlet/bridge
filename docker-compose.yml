@@ -1,4 +1,3 @@
-version: '3'
 services:
   bridgebot:
     build: .
@@ -9,5 +8,6 @@ services:
     command: ["yarn", "start"]
     volumes:
       - ./data:/usr/src/app/data
+      - ./data/account:/root/.minecraft
     environment:
       NODE_ENV: production
