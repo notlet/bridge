@@ -2,7 +2,6 @@ const { number } = require('mathjs');
 const config = require('../config.json');
 const { getPlayer, numberformatter } = require('../helper/functions.js');
 const render = require('../helper/loreRenderer.js').renderLore;
-const imgur = require('imgur-anonymous-uploader');
 
 const allTypes = {
 	gusher: '§fGusher',
@@ -31,7 +30,6 @@ module.exports = {
     args: '[ign] [profile]',
     execute: async (discordClient, message, messageAuthor) => {
         if (!config.keys.imgurClientId) return;
-		const uploader = new imgur(config.keys.imgurClientId);
 
         let { 1: username, 2: profile } = message.split(' ');
         if (!username) username = messageAuthor;
@@ -66,13 +64,17 @@ module.exports = {
 		const maxTypeLength = Math.max(...Object.values(formattedTypes).flat().map(n => n.length));
 		const typeTable = Object.keys(types).map(type => `§7| ${allTypes[type].padStart(maxLength)} §7| ${formattedTypes[type].map(n => n.padStart(maxTypeLength)).join(' §7| ')} §7|`);
 
-		const rendered = await render(`§6§l${username}'s Trophy Fish`, `§fTotal Caught: §l${total}\n§7${'='.repeat(typeTable[0].length - 26)}\n${typeTable.join('\n')}\n§7${'='.repeat(typeTable[0].length - 26)}`.split('\n'));
+		const rendered = await render(`§6§l${username}'s Trophy Fish`, `§fTotal Caught: §l${total}\n§7${'='.repeat(typeTable[0].length - 26)}\n${typeTable.join('\n')}\n§7${'='.repeat(typeTable[0].length - 26)}`.split('\n'), true);
 
-		require('fs').writeFileSync('./trophyfish.png', rendered);
-		const uploadResponse = await uploader.uploadBuffer(rendered);
-		if (!uploadResponse.url) return minecraftClient.chat(`/gc @${messageAuthor} Failed to upload image.`);
+		const messageUpload = await discordClient.guilds.cache.get('900248439907041290').channels.cache.get('1052691628013404241').send({
+            content: `<t:${Math.round(Date.now() / 1000)}> | \`${username}\`.`,
+            files: [ { attachment: rendered, name: `${username}.png` } ]
+        });
 
-		minecraftClient.chat(`/gc @${messageAuthor} ${uploadResponse.url}`);
+        const url = messageUpload.attachments.first()?.url;
+		if (!url) return minecraftClient.chat(`/gc @${messageAuthor} Failed to upload image.`);
+
+		minecraftClient.chat(`/gc @${messageAuthor} ${url}`);
 },
 };
 

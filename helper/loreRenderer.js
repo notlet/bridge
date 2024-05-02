@@ -3,6 +3,7 @@ Canvas.registerFont('./fonts/MinecraftRegular-Bmg3.ttf', { family: 'Minecraft' }
 Canvas.registerFont('./fonts/minecraft-bold.otf', { family: 'MinecraftBold' });
 Canvas.registerFont('./fonts/2_Minecraft-Italic.otf', { family: 'MinecraftItalic' });
 Canvas.registerFont('./fonts/unifont.ttf', { family: 'MinecraftUnicode' });
+Canvas.registerFont('./fonts/UbuntuSansMono.ttf', { family: 'UbuntuMono' });
 
 const RGBA_COLOR = {
     0: 'rgba(0,0,0,1)',
@@ -23,10 +24,10 @@ const RGBA_COLOR = {
     f: 'rgba(255,255,255,1)',
 };
 
-async function getCanvasWidthAndHeight(lore) {
+async function getCanvasWidthAndHeight(lore, monospace) {
     const canvas = Canvas.createCanvas(1, 1);
     const ctx = canvas.getContext('2d');
-    ctx.font = '24px Minecraft';
+    ctx.font = !monospace ? '24px Minecraft' : '24px UbuntuMono';
 
     let highestWidth = 0;
     for (let i = 0; i < lore.length; i++) {
@@ -39,9 +40,9 @@ async function getCanvasWidthAndHeight(lore) {
     return { height: lore.length * 24 + 15, width: highestWidth + 20 };
 }
 
-async function renderLore(itemName, lore) {
+async function renderLore(itemName, lore, monospace = false) {
     if (itemName) lore.unshift(itemName);
-    const measurements = await getCanvasWidthAndHeight(lore);
+    const measurements = await getCanvasWidthAndHeight(lore, monospace);
     const canvas = Canvas.createCanvas(measurements.width, measurements.height);
     const ctx = canvas.getContext('2d');
     // BACKGROUND
@@ -64,10 +65,10 @@ async function renderLore(itemName, lore) {
         for (const toRenderItem of splitItem) {
             ctx.fillStyle = RGBA_COLOR[toRenderItem[0]];
 
-            if (toRenderItem.startsWith('l')) ctx.font = '24px MinecraftBold, MinecraftUnicode';
+            if (toRenderItem.startsWith('l')) ctx.font = !monospace ? '24px MinecraftBold, MinecraftUnicode' : 'bold 24px UbuntuMono';
             else if (toRenderItem.startsWith('o')) ctx.font = '24px MinecraftItalic, MinecraftUnicode';
-            else ctx.font = '24px Minecraft, MinecraftUnicode';
-
+            else ctx.font = !monospace ? '24px Minecraft, MinecraftUnicode' : '24px UbuntuMono';
+			
             ctx.fillText(toRenderItem.substring(1), width, index * 24 + 29);
             width += ctx.measureText(toRenderItem.substring(1)).width;
         }
