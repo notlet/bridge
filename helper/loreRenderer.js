@@ -3,7 +3,7 @@ Canvas.registerFont('./fonts/MinecraftRegular-Bmg3.ttf', { family: 'Minecraft' }
 Canvas.registerFont('./fonts/minecraft-bold.otf', { family: 'MinecraftBold' });
 Canvas.registerFont('./fonts/2_Minecraft-Italic.otf', { family: 'MinecraftItalic' });
 Canvas.registerFont('./fonts/unifont.ttf', { family: 'MinecraftUnicode' });
-Canvas.registerFont('./fonts/UbuntuSansMono.ttf', { family: 'UbuntuMono' });
+//Canvas.registerFont('./fonts/UbuntuSansMono.ttf', { family: 'UbuntuMono' });
 
 const RGBA_COLOR = {
     0: 'rgba(0,0,0,1)',
@@ -27,7 +27,7 @@ const RGBA_COLOR = {
 async function getCanvasWidthAndHeight(lore, monospace) {
     const canvas = Canvas.createCanvas(1, 1);
     const ctx = canvas.getContext('2d');
-    ctx.font = !monospace ? '24px Minecraft' : '24px UbuntuMono';
+    ctx.font = !monospace ? '24px Minecraft' : '24px monospace';
 
     let highestWidth = 0;
     for (let i = 0; i < lore.length; i++) {
@@ -65,9 +65,9 @@ async function renderLore(itemName, lore, monospace = false) {
         for (const toRenderItem of splitItem) {
             ctx.fillStyle = RGBA_COLOR[toRenderItem[0]];
 
-            if (toRenderItem.startsWith('l')) ctx.font = !monospace ? '24px MinecraftBold, MinecraftUnicode' : 'bold 24px UbuntuMono';
+            if (toRenderItem.startsWith('l')) ctx.font = !monospace ? '24px MinecraftBold, MinecraftUnicode' : 'bold 24px monospace';
             else if (toRenderItem.startsWith('o')) ctx.font = '24px MinecraftItalic, MinecraftUnicode';
-            else ctx.font = !monospace ? '24px Minecraft, MinecraftUnicode' : '24px UbuntuMono';
+            else ctx.font = !monospace ? '24px Minecraft, MinecraftUnicode' : '24px monospace';
 			
             ctx.fillText(toRenderItem.substring(1), width, index * 24 + 29);
             width += ctx.measureText(toRenderItem.substring(1)).width;

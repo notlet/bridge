@@ -23,7 +23,7 @@ let messagesCache = [];
 let fragBotQueue = [];
 let isInFragParty = false;
 setInterval(() => {
-    const { sendDiscordMessage } = require('../discord/ready');
+    const { sendDiscordMessage } = require('../discord/ready.js');
 
     if (messagesCache.length > 0 && config.channels.ingameChatLog) {
         let messageString = messagesCache.join('\n');
@@ -268,7 +268,7 @@ module.exports = {
                                 minecraftClient.chat(`/msg ${username} You don't meet the requirements! ${requirementsDescription}`)
                             }
 
-                            const { sendDiscordMessage } = require('../discord/ready');
+                            const { sendDiscordMessage } = require('../discord/ready.js');
                             const embed = getRequirementEmbed(userRequirements, username, true, discordLink, user, overLevel10);
                             sendDiscordMessage({
                                 channelId: config.channels.officerIngameChat,

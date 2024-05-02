@@ -31,7 +31,7 @@ function getHeight(message, cwidth) {
     splitMessageSpace = splitMessageSpace.join(' ').replaceAll('\n', '\nn').split(' ');
     const splitMessage = splitMessageSpace.join(' ').split(/§|\n/g);
     splitMessage.shift();
-    ctx.font = '40px Minecraft, MinecraftUnicode';
+    ctx.font = '30px Minecraft, MinecraftUnicode';
 
     let width = 5;
     let height = 35;
@@ -40,11 +40,11 @@ function getHeight(message, cwidth) {
         const currentMessage = msg.substring(1);
         if (width + ctx.measureText(currentMessage).width > (cwidth || 1300) || msg.charAt(0) === 'n') {
             width = 5;
-            height += 40;
+            height += 30;
         }
         width += ctx.measureText(currentMessage).width;
     }
-    if (width == 5) height -= 40;
+    if (width == 5) height -= 30;
 
     return height + 10;
 }
@@ -64,7 +64,7 @@ function generateMessageImage(message, cwidth, background) {
     ctx.shadowOffsetX = 4;
     ctx.shadowOffsetY = 4;
     ctx.shadowColor = '#131313';
-    ctx.font = '40px Minecraft, MinecraftUnicode';
+    ctx.font = '30px Minecraft, MinecraftUnicode';
 
     if (background) {
         ctx.globalAlpha = 0.3;
@@ -83,14 +83,14 @@ function generateMessageImage(message, cwidth, background) {
     for (const msg of splitMessage) {
         const colorCode = RGBA_COLOR[msg.charAt(0)];
         const currentMessage = msg.substring(1);
-        if (width + ctx.measureText("  " + currentMessage).width > (cwidth || 1300) || msg.charAt(0) === 'n') {
+        if (width + ctx.measureText(currentMessage).width > (cwidth || 1300) || msg.charAt(0) === 'n') {
             width = 5;
-            height += 40;
+            height += 30;
         }
         if (colorCode) {
             ctx.fillStyle = colorCode;
         }
-        ctx.fillText("  " + currentMessage, width, background ? height + 10 : height);
+        ctx.fillText(currentMessage, width, background ? height + 10 : height);
         width += ctx.measureText(currentMessage).width;
     }
     return canvas.toBuffer();

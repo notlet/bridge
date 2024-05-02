@@ -1,9 +1,9 @@
 const { MessageEmbed } = require('discord.js');
 const config = require('../config.json');
 const { hypixelRequest, hypixelLevel, addCommas, toFixed } = require('./functions.js');
-const { getBedwarsLevel } = require('./getBedwarsLevel');
-const { getSkillAverage, getSkillLevel } = require('./skills');
-const { getSenitherWeight, getLilyWeight } = require('./weight');
+const { getBedwarsLevel } = require('./getBedwarsLevel.js');
+const { getSkillAverage, getSkillLevel } = require('./skills.js');
+const { getSenitherWeight, getLilyWeight } = require('./weight.js');
 const { getNetworth } = require('skyhelper-networth');
 
 const LONG_STATS = {
