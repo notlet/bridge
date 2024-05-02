@@ -8,41 +8,39 @@ module.exports = {
     description: 'Get a player\'s networth.',
     args: '[ign] [profile]',
     execute: async (discordClient, message, messageAuthor) => {
-        if (config.ingameCommands.networth) {
-            let { 1: username, 2: profile } = message.split(' ');
+		let { 1: username, 2: profile } = message.split(' ');
 
-            if (!username) username = messageAuthor;
+		if (!username) username = messageAuthor;
 
-            const searchedPlayer = await getPlayer(username, profile).catch((err) => {
-                return minecraftClient.chat(`/gc @${messageAuthor} ${err}`);
-            });
-            if (!searchedPlayer) return;
+		const searchedPlayer = await getPlayer(username, profile).catch((err) => {
+			return minecraftClient.chat(`/gc @${messageAuthor} ${err}`);
+		});
+		if (!searchedPlayer) return;
 
-            const searchedMuseum = await getMuseum(searchedPlayer.profileData.profile_id, searchedPlayer.uuid);
+		const searchedMuseum = await getMuseum(searchedPlayer.profileData.profile_id, searchedPlayer.uuid);
 
-            const networth = await getNetworth(searchedPlayer.memberData, searchedPlayer.profileData?.banking?.balance || 0, {
-                onlyNetworth: true,
-                museumData: searchedMuseum,
-            });
+		const networth = await getNetworth(searchedPlayer.memberData, searchedPlayer.profileData?.banking?.balance || 0, {
+			onlyNetworth: true,
+			museumData: searchedMuseum,
+		});
 
-            if (networth.noInventory) {
-                return minecraftClient.chat(
-                    `/gc @${messageAuthor}${messageAuthor === username ? "'s" : ` ${username}'s`} inventory API is disabled.`
-                );
-            }
+		if (networth.noInventory) {
+			return minecraftClient.chat(
+				`/gc @${messageAuthor}${messageAuthor === username ? "'s" : ` ${username}'s`} inventory API is disabled.`
+			);
+		}
 
-            if (Object.keys(funnynetworth).includes(username.toLowerCase())) {
-                return minecraftClient.chat(
-                    `/gc @${messageAuthor}${messageAuthor === username ? "'s" : ` ${username}'s`} networth is ${funnynetworth[username.toLowerCase()](networth.networth.toFixed(), numberformatter)}.`
-                );
-            }
+		if (Object.keys(funnynetworth).includes(username.toLowerCase())) {
+			return minecraftClient.chat(
+				`/gc @${messageAuthor}${messageAuthor === username ? "'s" : ` ${username}'s`} networth is ${funnynetworth[username.toLowerCase()](networth.networth.toFixed(), numberformatter)}.`
+			);
+		}
 
-            minecraftClient.chat(
-                `/gc @${messageAuthor}${messageAuthor === username ? "'s" : ` ${username}'s`} networth is ${numberformatter(
-                    networth.networth.toFixed(),
-                    3
-                )}`
-            );
-        }
+		minecraftClient.chat(
+			`/gc @${messageAuthor}${messageAuthor === username ? "'s" : ` ${username}'s`} networth is ${numberformatter(
+				networth.networth.toFixed(),
+				3
+			)}`
+		);
     },
 };

@@ -33,7 +33,7 @@ async function getPlayer(player, profile, getPlayerData) {
     }
 
     const mojangResponse = await nameToUUID(player);
-    if (!mojangResponse) throw new Error('Player not found');
+    if (!mojangResponse) throw new Error('Player not found or UUID lookup error!');
 
     const hypixelResponse = await hypixelRequest(`https://api.hypixel.net/skyblock/profiles?uuid=${mojangResponse}`, true);
     if (!hypixelResponse) throw new Error("Couldn't get a response from the API");
@@ -65,7 +65,7 @@ async function getGuildMemberData(player) {
     }
 
     const mojangResponse = await nameToUUID(player);
-    if (!mojangResponse) throw new Error('Player not found');
+    if (!mojangResponse) throw new Error('Player not found or UUID lookup error!');
 
     const hypixelResponse = await hypixelRequest(`https://api.hypixel.net/player?uuid=${mojangResponse}`, true);
     if (!hypixelResponse) throw new Error("Couldn't get a response from the API");
