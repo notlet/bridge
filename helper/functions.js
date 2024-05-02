@@ -205,9 +205,9 @@ async function UUIDtoName(uuid) {
     }
 }
 
-function numberformatter(num, num2) {
-    num = Number(num);
-    if (isNaN(num)) return 0;
+function numberformatter(numinput, num2) {
+    let num = Number(numinput);
+    if (isNaN(num)) return numinput;
     if (num > 999999999999) return Math.abs(num) > 999999999999 ? Math.sign(num) * (Math.abs(num) / 1000000000000).toFixed(num2) + 'T' : Math.sign(num) * Math.abs(num);
     if (num > 999999999) return Math.abs(num) > 999999999 ? Math.sign(num) * (Math.abs(num) / 1000000000).toFixed(num2) + 'B' : Math.sign(num) * Math.abs(num);
     if (num > 999999) return Math.abs(num) > 999999 ? Math.sign(num) * (Math.abs(num) / 1000000).toFixed(num2) + 'M' : Math.sign(num) * Math.abs(num);

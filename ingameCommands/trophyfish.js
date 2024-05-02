@@ -1,51 +1,38 @@
+const { number } = require('mathjs');
 const config = require('../config.json');
 const { getPlayer, numberformatter } = require('../helper/functions.js');
+const render = require('../helper/messageToImage.js');
+const imgur = require('imgur-anonymous-uploader');
 
-const tierToValue = {
-	bronze: 1,
-	silver: 2,
-	gold: 3,
-	diamond: 4
+const allTypes = {
+	gusher: '§fGusher',
+	blobfish: '§fBlobfish',
+	obfuscated_fish_1: '§fObfuscated 1',
+	sulphur_skitter: '§fSulphur Skitter',
+	steaming_hot_flounder: '§fFlounder',
+	flyfish: '§aFlyfish',
+	slugfish: '§aSlugfish',
+	obfuscated_fish_2: '§aObfuscated 2',
+	lava_horse: '§5Lavahorse',
+	mana_ray: '§5Mana Ray',
+	obfuscated_fish_3: '§5Obfuscated 3',
+	volcanic_stonefish: '§1Volcanic Stonefish',
+	vanille: '§1Vanille',
+	soul_fish: '§5Soul Fish',
+	karate_fish: '§5Karate Fish',
+	skeleton_fish: '§5Skeleton Fish',
+	moldfin: '§5Moldfin',
+	golden_fish: '§6Golden Fish',
 };
-
-const tierToName = {
-	bronze: 'B',
-	silver: 'S',
-	gold: 'G',
-	diamond: 'D'
-}
-
-const fishTypeToMessage = {
-	slugfish: 'Slug',
-	blobfish: 'Blob',
-	golden_fish: 'Golden',
-	vanille: 'Vanille',
-	sulphur_skitter: 'Skitter',
-	lava_horse: 'Lava',
-	gusher: 'Gusher',
-	obfuscated_fish_1: 'Obf1',
-	obfuscated_fish_2: 'Obf2',
-	obfuscated_fish_3: 'Obf3',
-	volcanic_stonefish: 'Stone',
-	mana_ray: 'Mana',
-	steaming_hot_flounder: 'Flounder',
-	flyfish: 'Fly',
-	moldfin: 'Mold',
-	skeleton_fish: 'Skele',
-	soul_fish: 'Soul',
-	karate_fish: 'Karate',
-};
-
-const compareTiers = (tier1, tier2) => {
-    const tierOrder = ['bronze', 'silver', 'gold', 'diamond'];
-    return tierOrder.indexOf(tier1) < tierOrder.indexOf(tier2);
-}
 
 module.exports = {
     name: 'trophyfish',
     description: 'Get a player\'s trophy fish stats.',
     args: '[ign] [profile]',
     execute: async (discordClient, message, messageAuthor) => {
+        if (!config.keys.imgurClientId) return;
+		const uploader = new imgur(config.keys.imgurClientId);
+
         let { 1: username, 2: profile } = message.split(' ');
         if (!username) username = messageAuthor;
 
@@ -56,20 +43,36 @@ module.exports = {
 		const trophyFish = searchedPlayer?.memberData?.trophy_fish;
         if (!trophyFish) return minecraftClient.chat(`/gc @${messageAuthor} Player does not have any trophy fish data.`);;
         
-        const highestTiers = {};
-        for (const key in trophyFish) {
-            if (!key.match('.+(?=_(bronze|silver|gold|diamond))')) continue;
-			if (!key.match('.+(?=_(bronze|silver|gold|diamond))')) return null;
-            const fishType = key.replace(/_(bronze|silver|gold|diamond)/, '');
-            const fishTier = key.match(/(bronze|silver|gold|diamond)/)[0];
-            if (!highestTiers[fishType] || compareTiers(highestTiers[fishType], fishTier)) {
-                highestTiers[fishType] = fishTier;
-            }
-		};
+		const total = numberformatter(trophyFish.total_caught, 1);
 
-		if (!Object.keys(highestTiers).length) return minecraftClient.chat(`/gc @${messageAuthor} ${username} has not caught any trophy fish.`);
+		const maxLength = Math.max(...Object.values(allTypes).map(type => type.length)) - 2;
+		const types = {};
+		Object.keys(allTypes).forEach(type => types[type] = [
+			trophyFish[type + '_bronze'] || 0,
+			trophyFish[type + '_silver'] || 0,
+			trophyFish[type + '_gold'] || 0, 
+			trophyFish[type + '_diamond'] || 0
+		]);
 
-        minecraftClient.chat(`/gc @${messageAuthor}${messageAuthor === username ? "'s" : ` ${username}'s`} total trophy fish caught: ${numberformatter(trophyFish.total_caught, 1)} | ${Object.keys(highestTiers).sort((a, b) => tierToValue[highestTiers[b]] - tierToValue[highestTiers[a]]).map(t => fishTypeToMessage[t] + ": " + tierToName[highestTiers[t]]).join(', ')}`.substring(0, 256));
-    },
+		const formattedTypes = {};
+		Object.keys(types).forEach(type => formattedTypes[type] = [
+			types[type][0] > 0 ? '§8' + numberformatter(types[type][0], 1) : '§4×',
+			types[type][1] > 0 ? '§7' + numberformatter(types[type][1], 1) : '§4×',
+			types[type][2] > 0 ? '§6' + numberformatter(types[type][2], 1) : '§4×',
+			types[type][3] > 0 ? '§b' + numberformatter(types[type][3], 1) : '§4×',
+			`§f${numberformatter(types[type].reduce((a, b) => a + b), 1)}`
+		]);
+
+		const maxTypeLength = Math.max(...Object.values(formattedTypes).flat().map(n => n.length - 2));
+			
+		const typeTable = Object.keys(types).map(type => `§7| ${allTypes[type].padStart(maxLength)} §7| ${formattedTypes[type].map(n => n.padStart(maxTypeLength)).join(' §7| ')} §7|`);
+
+		const rendered = render(`§6§l${username}'s Trophy Fish\n\n§fTotal Caught: §l${total}\n§7${'-'.repeat(typeTable[0].length - 16)}\n${typeTable.join('\n')}\n§7${'-'.repeat(typeTable[0].length - 16)}`, null, true);
+
+		const uploadResponse = await uploader.uploadBuffer(rendered);
+		if (!uploadResponse.url) return minecraftClient.chat(`/gc @${messageAuthor} Failed to upload image.`);
+
+		minecraftClient.chat(`/gc @${messageAuthor} ${uploadResponse.url}`);
+},
 };
 
