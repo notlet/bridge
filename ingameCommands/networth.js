@@ -12,10 +12,10 @@ module.exports = {
 
 		if (!username) username = messageAuthor;
 
-		const searchedPlayer = await getPlayer(username, profile).catch((err) => {
-			return minecraftClient.chat(`/gc @${messageAuthor} ${err}`);
-		});
-		if (!searchedPlayer) return;
+		const searchedPlayer = await getPlayer(username, profile).catch((err) => minecraftClient.chat(`/gc @${messageAuthor} ${err}`));
+        if (!searchedPlayer) return;
+		username = searchedPlayer.username;
+		
 
 		const searchedMuseum = await getMuseum(searchedPlayer.profileData.profile_id, searchedPlayer.uuid);
 

@@ -10,8 +10,10 @@ module.exports = {
         let { 1: username, 2: profile } = message.split(' ');
         if (!username) username = messageAuthor;
 
-        const searchedPlayer = await getPlayer(username, profile, true).catch((err) => minecraftClient.chat(`/gc @${messageAuthor} ${err}`));
-        
+        const searchedPlayer = await getPlayer(username, profile).catch((err) => minecraftClient.chat(`/gc @${messageAuthor} ${err}`));
+        if (!searchedPlayer) return;
+		username = searchedPlayer.username;
+		
 	    if (!searchedPlayer?.memberData?.dungeons) return;
         const dungeons = searchedPlayer.memberData.dungeons
 

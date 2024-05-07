@@ -26,10 +26,10 @@ module.exports = {
 		if (itemNumber < 1 || itemNumber > 9 || !itemNumber)
 			return minecraftClient.chat(`/gc @${messageAuthor} Invalid item number. Must be between 1 and 9.`);
 
-		const searchedPlayer = await getPlayer(username, profile).catch((err) => {
-			return minecraftClient.chat(`/gc @${messageAuthor} ${err}`);
-		});
+		const searchedPlayer = await getPlayer(username, profile).catch((err) => minecraftClient.chat(`/gc @${messageAuthor} ${err}`));
 		if (!searchedPlayer) return;
+		username = searchedPlayer.username;
+		
 		const playerProfile = searchedPlayer.memberData;
 
 		const inventory = playerProfile?.inv_contents?.data;

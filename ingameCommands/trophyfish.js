@@ -34,9 +34,9 @@ module.exports = {
         let { 1: username, 2: profile } = message.split(' ');
         if (!username) username = messageAuthor;
 
-        const searchedPlayer = await getPlayer(username, profile).catch((err) => {
-            return minecraftClient.chat(`/gc @${messageAuthor} ${err}`);
-        });
+        const searchedPlayer = await getPlayer(username, profile).catch((err) => minecraftClient.chat(`/gc @${messageAuthor} ${err}`));
+        if (!searchedPlayer) return;
+		username = searchedPlayer.username;
 
 		const trophyFish = searchedPlayer?.memberData?.trophy_fish;
         if (!trophyFish) return minecraftClient.chat(`/gc @${messageAuthor} Player does not have any trophy fish data.`);;

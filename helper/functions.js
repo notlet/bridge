@@ -32,15 +32,16 @@ async function getPlayer(player, profile, getPlayerData) {
         throw new Error('Invalid Username');
     }
 
-    const mojangResponse = await nameToUUID(player);
+    const mojangResponse = await nameToUUIDFull(player);
     if (!mojangResponse) throw new Error('Player not found or UUID lookup error!');
+	const { id: uuid, name: username } = mojangResponse;
 
-    const hypixelResponse = await hypixelRequest(`https://api.hypixel.net/skyblock/profiles?uuid=${mojangResponse}`, true);
+    const hypixelResponse = await hypixelRequest(`https://api.hypixel.net/skyblock/profiles?uuid=${uuid}`, true);
     if (!hypixelResponse) throw new Error("Couldn't get a response from the API");
     if (hypixelResponse.profiles === null) throw new Error(`Couldn\'t find any Skyblock profile that belongs to ${player}`);
 
     let hypixelResponse2 = {player: null}
-    if (getPlayerData) hypixelResponse2 = await hypixelRequest(`https://api.hypixel.net/player?uuid=${mojangResponse}`, true);
+    if (getPlayerData) hypixelResponse2 = await hypixelRequest(`https://api.hypixel.net/player?uuid=${uuid}`, true);
     if (!hypixelResponse2 && getPlayerData) hypixelResponse2 = {player: null};
 
     let profileData = getLastProfile(hypixelResponse);
@@ -50,7 +51,7 @@ async function getPlayer(player, profile, getPlayerData) {
 
     if (!profileData) throw new Error(`Couldn't find the specified Skyblock profile that belongs to ${player}.`);
 
-    return { memberData: profileData.members[mojangResponse], profileData, profiles: hypixelResponse.profiles, playerData: hypixelResponse2.player };
+    return { memberData: profileData.members[uuid], profileData, profiles: hypixelResponse.profiles, playerData: hypixelResponse2.player, username };
 }
 
 async function getMuseum(profile, uuid) {
@@ -192,6 +193,14 @@ async function hypixelRequest(url, useKey) {
 async function nameToUUID(name) {
     try {
         return (await axios.get(`https://api.mojang.com/users/profiles/minecraft/${name}`)).data.id;
+    } catch (e) {
+        return null;
+    }
+}
+
+async function nameToUUIDFull(name) {
+    try {
+        return (await axios.get(`https://api.mojang.com/users/profiles/minecraft/${name}`)).data;
     } catch (e) {
         return null;
     }

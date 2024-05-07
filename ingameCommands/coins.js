@@ -9,9 +9,9 @@ module.exports = {
         let { 1: username, 2: profile } = message.split(' ');
         if (!username) username = messageAuthor;
 
-        const searchedPlayer = await getPlayer(username, profile, true).catch((err) => minecraftClient.chat(`/gc @${messageAuthor} ${err}`));
-	    if (!searchedPlayer?.memberData) return;
-        username = searchedPlayer.username;
+        const searchedPlayer = await getPlayer(username, profile).catch((err) => minecraftClient.chat(`/gc @${messageAuthor} ${err}`));
+        if (!searchedPlayer.memberData) return;
+		username = searchedPlayer.username;
         
         const coins = searchedPlayer.memberData.coin_purse;
         const bank = searchedPlayer.profileData.banking.balance;
