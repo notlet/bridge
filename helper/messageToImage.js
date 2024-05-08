@@ -40,11 +40,11 @@ function getHeight(message, cwidth) {
         const currentMessage = msg.substring(1);
         if (width + ctx.measureText(currentMessage).width > (cwidth || 1300) || msg.charAt(0) === 'n') {
             width = 5;
-            height += 30;
+            height += 40;
         }
         width += ctx.measureText(currentMessage).width;
     }
-    if (width == 5) height -= 30;
+    if (width == 5) height -= 40;
 
     return height + 10;
 }
@@ -85,7 +85,7 @@ function generateMessageImage(message, cwidth, background) {
         const currentMessage = msg.substring(1);
         if (width + ctx.measureText(currentMessage).width > (cwidth || 1300) || msg.charAt(0) === 'n') {
             width = 5;
-            height += 30;
+            height += 40;
         }
         if (colorCode) {
             ctx.fillStyle = colorCode;

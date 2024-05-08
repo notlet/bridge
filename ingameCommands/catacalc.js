@@ -111,13 +111,12 @@ module.exports = {
         const floorBase = floorXp[score][floor];
 
         // How much xp after bonus xp?
-        let floorXP = expertRing ? floorBase * 1.1 : 0;
-        // Could add more boni here
+        let floorXP = floorBase * (expertRing ? 1.1 : 1);
 
         // How many floors?
         const floors = Math.ceil(needed / floorXP);
         score = score === 'sPlus' ? 'S+' : 'S';
-        minecraftClient.chat(`/gc @${messageAuthor}${messageAuthor === username ? "'s" : ` ${username}'s`} catacombs calculation: | Total XP needed for ${level}: ${numberformatter(needed, 2)} | XP per ${floor.toUpperCase()} ${score}: ${numberformatter(floorXP, 2)} | Runs needed: ${floors})`);
+        minecraftClient.chat(`/gc @${messageAuthor}${messageAuthor === username ? "'s" : ` ${username}'s`} catacombs calculation: | Total XP needed for ${level}: ${numberformatter(needed, 2)} | XP per ${floor.toUpperCase()} ${score}: ${numberformatter(floorXP, 2)} | Runs needed: ${floors}`);
     },
 };
 

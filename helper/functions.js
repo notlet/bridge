@@ -33,7 +33,7 @@ async function getPlayer(player, profile, getPlayerData) {
     }
 
     const mojangResponse = await nameToUUIDFull(player);
-    if (!mojangResponse) throw new Error('Player not found or UUID lookup error!');
+    if (!mojangResponse) throw new Error('Player not found or UUID lookup error! | If you are sure the username is correct, just try again.');
 	const { id: uuid, name: username } = mojangResponse;
 
     const hypixelResponse = await hypixelRequest(`https://api.hypixel.net/skyblock/profiles?uuid=${uuid}`, true);
@@ -200,7 +200,9 @@ async function nameToUUID(name) {
 
 async function nameToUUIDFull(name) {
     try {
-        return (await axios.get(`https://api.mojang.com/users/profiles/minecraft/${name}`)).data;
+		const data = (await axios.get(`https://api.mojang.com/users/profiles/minecraft/${name}`)).data;
+        if (!data) return (await axios.get(`https://api.mojang.com/users/profiles/minecraft/${name}`)).data;
+		return data;
     } catch (e) {
         return null;
     }
