@@ -1749,10 +1749,10 @@ skin-tone@^2.0.0:
   dependencies:
     unicode-emoji-modifier-base "^1.0.0"
 
-skyhelper-networth@^1.18.7:
-  version "1.18.7"
-  resolved "https://registry.yarnpkg.com/skyhelper-networth/-/skyhelper-networth-1.18.7.tgz#278b3e94b476b410063226c98d0a9990a9b05b9a"
-  integrity sha512-4V9CbfLfi3kC+CD6v5+I8lf4vFSPv87uA7iLYQgYrwjmoy4bqQprFZwt7LRjI9+jb4xkYjXxI0pwZe4Ey2MfMw==
+skyhelper-networth@^1.20.0:
+  version "1.20.0"
+  resolved "https://registry.yarnpkg.com/skyhelper-networth/-/skyhelper-networth-1.20.0.tgz#0c5a9d0db0d615fbc5900e1549d37e83f33ab8e1"
+  integrity sha512-SRm90ZtC67R+8M/iS6W1fDo+YO16+PQR7CRkBPLRh3EODfmK1pC6QPIZiDHQmd2yK9b19MGchgrjeb2sL5nJjA==
   dependencies:
     axios "^1.6.2"
     prismarine-nbt "^2.2.1"
