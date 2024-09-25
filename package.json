@@ -20,7 +20,7 @@
         "mathjs": "^12.4.1",
         "mineflayer": "^4.20.1",
         "node-emoji": "^2.1.3",
-        "skyhelper-networth": "^1.23.0",
+        "skyhelper-networth": "^1.25.0",
         "sourcebin": "^4.3.5"
     }
 }
