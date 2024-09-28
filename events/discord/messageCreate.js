@@ -71,10 +71,11 @@ module.exports = {
 				}
 			}
 
-			if (attachments.length > 0 && (messagePrefix + (msg + " ┇ " + attachments.join(" ")).trim()).length >= 256) {
-				const toDelete2 = await message.reply('This message was too long. Skipping sending attachments.');
-				setTimeout(async () => await toDelete2.delete(), 5000);
-			} else if (attachments.length > 0) msg = (msg + " ┇ " + attachments.join(" ")).trim()
+			//if (attachments.length > 0 && (messagePrefix + (msg + " ┇ " + attachments.join(" ")).trim()).length >= 256) {
+			//	const toDelete2 = await message.reply('This message was too long. Skipping sending attachments.');
+			//	setTimeout(async () => await toDelete2.delete(), 5000);
+			//} else if (attachments.length > 0) msg = (msg + " ┇ " + attachments.join(" ")).trim()
+			if (attachments.length > 0) msg = (`${msg} ┇ [${attachments.length} attachment${attachments.length > 1 ? "s" : ""}]`).trim()
 
 			minecraftClient.chat(msg);
 		}
