@@ -14,7 +14,7 @@ module.exports = {
         
 	    if (!searchedPlayer?.memberData?.nether_island_player_data) return;
         const kuudra = searchedPlayer.memberData.nether_island_player_data.kuudra_completed_tiers;
-        const tiers = ["none", "hot", "burning", "fiery", "infernal"].map((t, i) => `T${i + 1}: ${numberformatter(kuudra[t], 2)} comps, highest wave: ${kuudra[`highest_wave_${t}`] || 0}`);
+        const tiers = ["none", "hot", "burning", "fiery", "infernal"].map((t, i) => `T${i + 1}: ${kuudra[t] ? numberformatter(kuudra[t], 2) : 0} comps, highest wave: ${kuudra[`highest_wave_${t}`] || 0}`);
 
         minecraftClient.chat(`/gc @${messageAuthor}${messageAuthor === username ? "'s" : ` ${username}'s`} kuudra stats are: | ${tiers.join(' | ')} | Magic Power: ${searchedPlayer.memberData.accessory_bag_storage.highest_magical_power || 0}.`);
     },

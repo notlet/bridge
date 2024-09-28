@@ -22,6 +22,7 @@ module.exports = {
 		const networth = await getNetworth(searchedPlayer.memberData, searchedPlayer.profileData?.banking?.balance || 0, {
 			onlyNetworth: true,
 			museumData: searchedMuseum,
+			v2Endpoint: true
 		});
 
 		if (networth.noInventory) {

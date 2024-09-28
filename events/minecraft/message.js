@@ -65,7 +65,7 @@ module.exports = {
             const parsedMessage = JSON.parse(msgString);
             if (config.options.limbo) {
                 if (parsedMessage.server !== 'limbo' && parsedMessage) {
-                    return minecraftClient.chat('\u00a7');
+                    return minecraftClient.chat('/limbo');
                 } else if (parsedMessage.server === 'limbo') {
                     return;
                 }
