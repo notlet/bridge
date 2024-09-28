@@ -16,4 +16,8 @@ COPY package.json yarn.lock ./
 RUN yarn install
 COPY . .
 
-CMD [ "yarn", "start" ]
+LABEL org.opencontainers.image.source=https://github.com/notlet/bridge
+LABEL org.opencontainers.image.description="discord to hypixel guild chat bridge bot"
+LABEL org.opencontainers.image.licenses=MIT
+
+ENTRYPOINT [ "yarn", "start" ]
