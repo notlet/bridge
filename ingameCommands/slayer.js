@@ -15,17 +15,19 @@ module.exports = {
         if (!searchedPlayer) return;
 		username = searchedPlayer.username;
 
-	    if (!searchedPlayer?.memberData?.slayer_bosses) return;
+        const slayerdata = searchedPlayer?.memberData?.slayer?.slayer_bosses
+
+	    if (!slayerdata) return minecraftClient.chat(`/gc @${messageAuthor} ${username} has no slayer data or something went wrong.`);
         const memberData = searchedPlayer.memberData;
 
-        const total = (memberData?.slayer_bosses?.zombie?.xp || 0) + (memberData?.slayer_bosses?.spider?.xp || 0) + (memberData?.slayer_bosses?.wolf?.xp || 0) + (memberData?.slayer_bosses?.enderman?.xp || 0) + (memberData?.slayer_bosses?.blaze?.xp || 0);
+        const total = (slayerdata.zombie?.xp || 0) + (slayerdata.spider?.xp || 0) + (slayerdata.wolf?.xp || 0) + (slayerdata.enderman?.xp || 0) + (slayerdata.blaze?.xp || 0);
         const slayers = {
-            "rev": getSkillLevel(memberData?.slayer_bosses?.zombie?.xp || 0, { skill: 'slayer', totalExp: true }).fancy,
-            "tara": getSkillLevel(memberData?.slayer_bosses?.spider?.xp || 0, { skill: 'slayer', totalExp: true }).fancy,
-            "wolf": getSkillLevel(memberData?.slayer_bosses?.wolf?.xp || 0, { skill: 'slayer', totalExp: true }).fancy,
-            "eman": getSkillLevel(memberData?.slayer_bosses?.enderman?.xp || 0, { skill: 'slayer', totalExp: true }).fancy,
-            "blaze": getSkillLevel(memberData?.slayer_bosses?.blaze?.xp || 0, { skill: 'slayer', totalExp: true }).fancy,
-            "vampire": getSkillLevel(memberData?.slayer_bosses?.vampire?.xp || 0, { skill: 'slayer_vampire', totalExp: true }).fancy
+            "rev": getSkillLevel(slayerdata.zombie?.xp || 0, { skill: 'slayer', totalExp: true }).fancy,
+            "tara": getSkillLevel(slayerdata.spider?.xp || 0, { skill: 'slayer', totalExp: true }).fancy,
+            "wolf": getSkillLevel(slayerdata.wolf?.xp || 0, { skill: 'slayer', totalExp: true }).fancy,
+            "eman": getSkillLevel(slayerdata.enderman?.xp || 0, { skill: 'slayer', totalExp: true }).fancy,
+            "blaze": getSkillLevel(slayerdata.blaze?.xp || 0, { skill: 'slayer', totalExp: true }).fancy,
+            "vampire": getSkillLevel(slayerdata.vampire?.xp || 0, { skill: 'slayer_vampire', totalExp: true }).fancy
         }
 
         minecraftClient.chat(`/gc @${messageAuthor}${messageAuthor === username ? "" : ` ${username}`} has ${numberformatter(total, 2)} total slayer exp. | Zombie: ${slayers.rev} | Spider: ${slayers.tara} | Wolf: ${slayers.wolf} | Eman: ${slayers.eman} | Blaze: ${slayers.blaze} | Vampire: ${slayers.vampire}`);

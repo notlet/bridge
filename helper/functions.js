@@ -14,10 +14,7 @@ function formatDiscordMessage(message) {
     return message.replace(/\*/g, '\\*').replace(/_/g, '\\_').replace(/~/g, '\\~').replace(/`/g, '\\`').replace(/>/g, '\\>');
 }
 
-function getLastProfile(data) {
-    const profiles = data.profiles;
-    return profiles.sort((a, b) => b.selected - a.selected)[0];
-}
+const getLastProfile = data => data.profiles.find(p => p.selected) || data.profiles[0];
 
 function isValidUsername(username) {
     if (username.match(/^[0-9a-zA-Z_]+$/)) {
@@ -36,18 +33,16 @@ async function getPlayer(player, profile, getPlayerData) {
     if (!mojangResponse) throw new Error('Player not found or UUID lookup error! | If you are sure the username is correct, just try again.');
 	const { id: uuid, name: username } = mojangResponse;
 
-    const hypixelResponse = await hypixelRequest(`https://api.hypixel.net/skyblock/profiles?uuid=${uuid}`, true);
+    const hypixelResponse = await hypixelRequest(`https://api.hypixel.net/v2/skyblock/profiles?uuid=${uuid}`, true);
+    console.log(hypixelResponse)
     if (!hypixelResponse) throw new Error("Couldn't get a response from the API");
     if (hypixelResponse.profiles === null) throw new Error(`Couldn\'t find any Skyblock profile that belongs to ${player}`);
 
     let hypixelResponse2 = {player: null}
-    if (getPlayerData) hypixelResponse2 = await hypixelRequest(`https://api.hypixel.net/player?uuid=${uuid}`, true);
+    if (getPlayerData) hypixelResponse2 = await hypixelRequest(`https://api.hypixel.net/v2/player?uuid=${uuid}`, true);
     if (!hypixelResponse2 && getPlayerData) hypixelResponse2 = {player: null};
 
-    let profileData = getLastProfile(hypixelResponse);
-    if (profile) {
-        profileData = hypixelResponse.profiles.find((p) => p.cute_name.toLowerCase() === profile.toLowerCase()) || getLastProfile(hypixelResponse);
-    }
+    let profileData = profile ? hypixelResponse.profiles.find((p) => p.cute_name.toLowerCase() === profile.toLowerCase()) : getLastProfile(hypixelResponse);
 
     if (!profileData) throw new Error(`Couldn't find the specified Skyblock profile that belongs to ${player}.`);
 
@@ -55,7 +50,7 @@ async function getPlayer(player, profile, getPlayerData) {
 }
 
 async function getMuseum(profile, uuid) {
-    const hypixelResponse = await hypixelRequest(`https://api.hypixel.net/skyblock/museum?profile=${profile}`, true);
+    const hypixelResponse = await hypixelRequest(`https://api.hypixel.net/v2/skyblock/museum?profile=${profile}`, true);
     if (!hypixelResponse) throw new Error("Couldn't get a response from the API");
     return hypixelResponse.members?.[uuid];
 }
@@ -68,7 +63,7 @@ async function getGuildMemberData(player) {
     const mojangResponse = await nameToUUID(player);
     if (!mojangResponse) throw new Error('Player not found or UUID lookup error!');
 
-    const hypixelResponse = await hypixelRequest(`https://api.hypixel.net/player?uuid=${mojangResponse}`, true);
+    const hypixelResponse = await hypixelRequest(`https://api.hypixel.net/v2/player?uuid=${mojangResponse}`, true);
     if (!hypixelResponse) throw new Error("Couldn't get a response from the API");
     if (!hypixelResponse?.player) throw new Error('This player never joined the Hypixel network before');
 
@@ -186,7 +181,7 @@ async function hypixelRequest(url, useKey) {
             return (await axios.get(url)).data;
         }
     } catch (e) {
-        return null;
+        return e;
     }
 }
 

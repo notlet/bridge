@@ -13,9 +13,10 @@ module.exports = {
         if (!searchedPlayer.memberData) return;
 		username = searchedPlayer.username;
         
-        const coins = searchedPlayer.memberData.coin_purse;
+        const coins = searchedPlayer.memberData.currencies.coin_purse;
+        const motes = searchedPlayer.memberData.currencies.motes_purse;
         const bank = searchedPlayer.profileData.banking.balance;
 
-        minecraftClient.chat(`/gc @${messageAuthor}${messageAuthor === username ? "" : ` ${username}`} has ${numberformatter(coins, 2)} purse and ${numberformatter(bank, 2)} coins in bank.`);
+        minecraftClient.chat(`/gc @${messageAuthor}${messageAuthor === username ? "" : ` ${username}`} has ${numberformatter(coins, 2)} purse${(motes && motes > 0) && `, ${numberformatter(motes, 2)} motes, `} and ${numberformatter(bank, 2)} coins in bank.`);
     },
 };

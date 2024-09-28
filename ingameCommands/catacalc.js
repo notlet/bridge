@@ -76,21 +76,20 @@ module.exports = {
 
         // What's the start level? How much XP needed?
         if (isNaN(level)) return minecraftClient.chat(`/gc @${messageAuthor} Invalid level!`);
-        if (!searchedPlayer?.memberData?.dungeons?.dungeon_types?.catacombs?.experience) return;
         const curXP = searchedPlayer.memberData.dungeons.dungeon_types.catacombs.experience;
+		if (!curXP) return minecraftClient.chat(`/gc @${messageAuthor} ${username} has no catacombs data or something went wrong.`);
         const neededTotal = skillTables.dungeoneering[parseInt(level)];
         const needed = neededTotal - curXP;
 
         if (needed <= 0) return minecraftClient.chat(`/gc @${messageAuthor}${messageAuthor === username ? "'s" : ` ${username}'s`} catacombs level is already ${level} or higher!`);
 
         // Has cata expert ring?
-        if (!searchedPlayer?.memberData?.talisman_bag?.data) return;
-        const taliNBTEncoded = searchedPlayer.memberData.talisman_bag.data;
-        const taliNBTNonSimplified = await parseNbt(Buffer.from(taliNBTEncoded, 'base64'));
-        const tali = await nbt.simplify(taliNBTNonSimplified);
+		const taliNBTEncoded = searchedPlayer?.memberData?.inventory?.bag_contents?.talisman_bag?.data;
+		let expertRing = false;
 
-        expertRing = false;
-        try {
+        if (taliNBTEncoded) try {
+			const taliNBTNonSimplified = await parseNbt(Buffer.from(taliNBTEncoded, 'base64'));
+			const tali = await nbt.simplify(taliNBTNonSimplified);
             for (const talisman of tali.i) {
                 if (talisman?.tag?.ExtraAttributes?.id === "CATACOMBS_EXPERT_RING") {
                     expertRing = true;
@@ -98,7 +97,7 @@ module.exports = {
                 }
             }
         } catch (error) {
-            console.warn("Something wrong happened while checking for Expert Ring: ", error);
+            console.warn("Something went wrong while checking for Expert Ring: ", error);
         }
 
         score = score.toLowerCase();
