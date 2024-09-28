@@ -1,13 +1,8 @@
 services:
   bridgebot:
-    build: .
-    image: bridge
+    image: ghcr.io/notlet/bridge
     container_name: bridgebot
     restart: always
-    working_dir: /usr/src/app
-    command: ["yarn", "start"]
     volumes:
       - ./data:/usr/src/app/data
       - ./data/account:/root/.minecraft
-    environment:
-      NODE_ENV: production
