@@ -1,7 +1,7 @@
 const { getNetworth } = require('skyhelper-networth');
 const config = require('../config.json');
 const { getPlayer, getMuseum, numberformatter } = require('../helper/functions.js');
-const funnynetworth = require('../funnynetworth.js');
+const funnynetworth = require('../data/funnynetworth.js');
 
 module.exports = {
     name: 'networth',

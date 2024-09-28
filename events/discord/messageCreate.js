@@ -15,6 +15,9 @@ module.exports = {
 		attachments = message.attachments.map(a => a.url);
 		if (message.attachments.length == 0 && message.content === '') return;
 
+		// it works
+		message.content = message.content.replaceAll(/(?<=\W|^)(ez)(?=\W|$)/g, "éz")
+
 		if (message.content.startsWith('\\')) {
 			message.content = message.content.substring(1);
 		}

@@ -52,7 +52,7 @@ module.exports = {
             let match = msgStringColor.substr(10).match(/(§[a-f0-9]{1})(\[[§A-Za-z0-9\+]+\] )?([0-9A-Za-z_]{3,22})/i);
             //console.log(match);
             if (match) {
-                const funnynames = require('../../funnynames.js');
+                const funnynames = require('../../data/funnynames.js');
                 //console.log(funnynames, Object.keys(funnynames))
                 if (Object.keys(funnynames).includes(match[3].trim()) && !nonBomb.active) msgStringColor = msgStringColor.replace(match[0], funnynames[match[3].trim()](match[1], match[2], match[3]));
                 if (Math.round(Date.now() / 1000) - nonBomb.lastUsed > 300 && nonBomb.active) nonBomb.active = false; 
