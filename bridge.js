@@ -27,7 +27,7 @@ global.blacklist = JSON.parse(fs.readFileSync(process.cwd() + "/data/blacklist.j
 
 startMinecraftBot(minecraftClient, discordClient);
 async function startMinecraftBot(minecraftClient, discordClient) {
-    minecraftClient.on('end', async () => {
+    async function reconnectBot() {
         if (config.channels.logOptions.hypixelDisconnect) {
             await discordClient.channels.cache
                 .get(config.channels.log)
@@ -35,7 +35,11 @@ async function startMinecraftBot(minecraftClient, discordClient) {
         }
         global.minecraftClient = mineflayer.createBot(minecraftLoginOptions);
         startMinecraftBot(minecraftClient, discordClient);
-    });
+    }
+    
+    minecraftClient.on('end', reconnectBot);
+    minecraftClient.on('kicked', reconnectBot);
+    minecraftClient.on('error', reconnectBot);
 
     require('./handlers/minecraftEvents')(discordClient);
     require('./handlers/minecraftCommands')(discordClient);
